@@ -51,6 +51,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+			<version>2.2.224</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -134,7 +140,7 @@
 			</build>
 
 			<properties>
-            	<activated.profile>dev</activated.profile>
+            	<activated.profile>devtest</activated.profile>
         	</properties>
 		</profile>
 
@@ -180,7 +186,7 @@
 			</build>
 
 			<properties>
-            	<activated.profile>testprod</activated.profile>
+            	<activated.profile>hmlogprod</activated.profile>
         	</properties>
 		</profile>
 
@@ -197,7 +203,7 @@
 			</dependencies>
 
 			<properties>
-            	<activated.profile>testprod</activated.profile>
+            	<activated.profile>hmlogprod</activated.profile>
         	</properties>
 		</profile>
 	</profiles>
