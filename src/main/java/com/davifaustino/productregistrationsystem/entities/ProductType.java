@@ -22,7 +22,7 @@ public class ProductType {
     private EnumCategories category;
 
     @Column(name = "average_price")
-    private int averagePrice;
+    private Integer averagePrice;
 
     @Column(name = "full_stock_factor")
     private short fullStockFactor;
