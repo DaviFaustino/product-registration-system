@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +20,7 @@ import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductTypeMapper;
 import com.davifaustino.productregistrationsystem.entities.EnumCategories;
 import com.davifaustino.productregistrationsystem.entities.ProductType;
+import com.davifaustino.productregistrationsystem.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.services.ProductTypeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,5 +68,39 @@ public class ProductTypeControllerTest {
         
         verify(productTypeService).saveProductType(any());
         verifyNoMoreInteractions(productTypeService);
+    }
+
+    @Test
+    @DisplayName("Must throw a RecordConflictException")
+    void testSaveProductTypeCase2() throws Exception {
+        when(productTypeMapper.toEntity(any())).thenReturn(productType);
+        when(productTypeService.saveProductType(any())).thenThrow(new RecordConflictException("The Product Type already exists in the database"));
+
+        mockMvc.perform(post("/product-types")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoRequestAsJson))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message", is("The Product Type already exists in the database")))
+                .andExpect(jsonPath("$.time", notNullValue()))
+                .andExpect(jsonPath("$.path", is("/product-types")))
+                .andExpect(jsonPath("$.method", is("POST")));
+
+        verify(productTypeMapper, VerificationModeFactory.times(0)).toDto(any());
+    }
+
+    @Test
+    @DisplayName("Must throw a validation exception")
+    void testSaveProductTypeCase3() throws Exception {
+        productTypeDto.setName(null);
+        dtoRequestAsJson = objectMapper.writeValueAsString(productTypeDto);
+
+        mockMvc.perform(post("/product-types")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoRequestAsJson))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", notNullValue()))
+                .andExpect(jsonPath("$.time", notNullValue()))
+                .andExpect(jsonPath("$.path", is("/product-types")))
+                .andExpect(jsonPath("$.method", is("POST")));
     }
 }
