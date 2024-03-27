@@ -33,7 +33,7 @@ public class ProductTypeServiceTest {
     }
 
     @Test
-    @DisplayName("Should save a product to the database successfully")
+    @DisplayName("Must save a product type to the database successfully")
     void testSaveProductTypeCase1() {
         when(productTypeRepository.existsById(any())).thenReturn(false);
         when(productTypeRepository.save(any(ProductType.class))).thenReturn(productType);
@@ -45,7 +45,7 @@ public class ProductTypeServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw an error when trying to save a product to the database")
+    @DisplayName("Must throw an error when trying to save a product type to the database")
     void testSaveProductTypeCase2() {
         when(productTypeRepository.existsById(any())).thenReturn(true);
 
