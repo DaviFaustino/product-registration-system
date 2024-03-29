@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.davifaustino.productregistrationsystem.entities.EnumCategories;
+import com.davifaustino.productregistrationsystem.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.entities.ProductType;
 import com.davifaustino.productregistrationsystem.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.repositories.ProductTypeRepository;
@@ -29,7 +29,7 @@ public class ProductTypeServiceTest {
 
     @BeforeEach
     void setup() {
-        productType = new ProductType("Sabão em barra", EnumCategories.LIMPEZA_E_HIGIENE, null, (short) 2);
+        productType = new ProductType("Sabão em barra", EnumCategory.LIMPEZA_E_HIGIENE, null, (short) 2);
     }
 
     @Test

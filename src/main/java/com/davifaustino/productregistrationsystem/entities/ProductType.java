@@ -22,7 +22,7 @@ public class ProductType {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private EnumCategories category;
+    private EnumCategory category;
 
     @Column(name = "average_price_in_cents")
     private Integer averagePriceInCents;

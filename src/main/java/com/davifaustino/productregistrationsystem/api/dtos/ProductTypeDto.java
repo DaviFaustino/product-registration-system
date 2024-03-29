@@ -1,6 +1,6 @@
 package com.davifaustino.productregistrationsystem.api.dtos;
 
-import com.davifaustino.productregistrationsystem.entities.EnumCategories;
+import com.davifaustino.productregistrationsystem.entities.EnumCategory;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ public class ProductTypeDto {
     @NotNull
     String name;
 
-    EnumCategories category;
+    EnumCategory category;
 
     Integer averagePriceInCents;
 

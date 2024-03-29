@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductTypeMapper;
-import com.davifaustino.productregistrationsystem.entities.EnumCategories;
+import com.davifaustino.productregistrationsystem.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.entities.ProductType;
 import com.davifaustino.productregistrationsystem.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.services.ProductTypeService;
@@ -44,8 +44,8 @@ public class ProductTypeControllerTest {
 
     @BeforeEach
     void setup() throws JsonProcessingException {
-        productType = new ProductType("1kg de Arroz", EnumCategories.ALIMENTOS_REVENDA, 750, (short) 1);
-        productTypeDto = new ProductTypeDto("1kg de Arroz", EnumCategories.ALIMENTOS_REVENDA, 750, (short) 1);
+        productType = new ProductType("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA, 750, (short) 1);
+        productTypeDto = new ProductTypeDto("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA, 750, (short) 1);
         dtoRequestAsJson = objectMapper.writeValueAsString(productTypeDto);
     }
 

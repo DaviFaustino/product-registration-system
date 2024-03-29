@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
-import com.davifaustino.productregistrationsystem.entities.EnumCategories;
+import com.davifaustino.productregistrationsystem.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.entities.ProductType;
 
 @SpringBootTest(classes = ProductTypeMapper.class)
@@ -20,7 +20,7 @@ public class ProductTypeMapperTest {
 
     @Test
     void testToEntity() {
-        ProductTypeDto productTypeDto = new ProductTypeDto("1kg de Feijão", EnumCategories.ALIMENTOS_REVENDA,1000, (short) 2);
+        ProductTypeDto productTypeDto = new ProductTypeDto("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2);
         
         ProductType response = productTypeMapper.toEntity(productTypeDto);
 
@@ -33,7 +33,7 @@ public class ProductTypeMapperTest {
 
     @Test
     void testToDto() {
-        ProductType productType = new ProductType("1kg de Feijão", EnumCategories.ALIMENTOS_REVENDA,1000, (short) 2);
+        ProductType productType = new ProductType("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2);
 
         ProductTypeDto response = productTypeMapper.toDto(productType);
 
