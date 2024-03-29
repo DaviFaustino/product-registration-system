@@ -2,6 +2,8 @@ package com.davifaustino.productregistrationsystem.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,9 +21,10 @@ public class ProductType {
     @Id
     private String name;
 
+    @Enumerated(EnumType.STRING)
     private EnumCategories category;
 
-    @Column(name = "average_price")
+    @Column(name = "average_price_in_cents")
     private Integer averagePriceInCents;
 
     @Column(name = "full_stock_factor")
