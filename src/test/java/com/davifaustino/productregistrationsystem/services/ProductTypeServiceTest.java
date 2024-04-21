@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,5 +54,25 @@ public class ProductTypeServiceTest {
 
         assertThrows(RecordConflictException.class, () -> productTypeService.saveProductType(productType));
         verifyNoMoreInteractions(productTypeRepository);
+    }
+
+    @Test
+    @DisplayName("Must get a list of product types using search term and category")
+    void testGetProductTypesCase1() {
+        List<ProductType> serviceReturn = productTypeService.getProductTypes("Arr", Optional.of(EnumCategory.ALIMENTOS_REVENDA));
+
+        assertNotNull(serviceReturn);
+        verify(productTypeRepository, times(1)).findByNameIgnoreCaseContainingAndCategory(any(), any());
+        verify(productTypeRepository, times(0)).findByNameIgnoreCaseContaining(any());
+    }
+
+    @Test
+    @DisplayName("Must get a list of product types using only the search term")
+    void testGetProductTypesCase2() {
+        List<ProductType> serviceReturn = productTypeService.getProductTypes("Arr", Optional.of(EnumCategory.ALIMENTOS_REVENDA));
+
+        assertNotNull(serviceReturn);
+        verify(productTypeRepository, times(1)).findByNameIgnoreCaseContainingAndCategory(any(), any());
+        verify(productTypeRepository, times(0)).findByNameIgnoreCaseContaining(any());
     }
 }
