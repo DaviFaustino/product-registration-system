@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -102,5 +103,33 @@ public class ProductTypeControllerTest {
                 .andExpect(jsonPath("$.time", notNullValue()))
                 .andExpect(jsonPath("$.path", is("/product-types")))
                 .andExpect(jsonPath("$.method", is("POST")));
+    }
+
+    @Test
+    @DisplayName("Must return a list of product types sucessfully")
+    void testGetProductTypesCase1() throws Exception {
+
+        mockMvc.perform(get("/product-types")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("searchTerm", "d")
+                        .param("category", "PANIFICAÇÃO"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(Matchers.startsWith("[")));
+    }
+
+    @Test
+    @DisplayName("Must throw a MethodArgumentTypeMismatchException")
+    void testGetProductTypesCase2() throws Exception {
+
+        mockMvc.perform(get("/product-types")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("category", "PANIFICA"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", notNullValue()))
+                .andExpect(jsonPath("$.time", notNullValue()))
+                .andExpect(jsonPath("$.path", is("/product-types")))
+                .andExpect(jsonPath("$.method", is("GET")));
+
+        verify(productTypeService, times(0)).getProductTypes(any(), any());
     }
 }
