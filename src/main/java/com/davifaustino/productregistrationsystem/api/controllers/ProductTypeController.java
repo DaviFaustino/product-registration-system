@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.davifaustino.productregistrationsystem.api.dtos.ErrorResponseDto;
 import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductTypeMapper;
+import com.davifaustino.productregistrationsystem.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.entities.ProductType;
 import com.davifaustino.productregistrationsystem.services.ProductTypeService;
 
@@ -17,16 +18,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping(value = "/product-types", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/product-types", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "ProductTypes")
 public class ProductTypeController {
 
@@ -45,10 +51,17 @@ public class ProductTypeController {
         @ApiResponse(responseCode = "409", description = "Product type already exists in the database",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponseDto.class))})
     })
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductTypeDto> saveProductType (@RequestBody @Valid ProductTypeDto dto) {
         ProductType response = productTypeService.saveProductType(productTypeMapper.toEntity(dto));
         
         return ResponseEntity.status(HttpStatus.CREATED).body(productTypeMapper.toDto(response));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductType>> getProductTypes(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) EnumCategory category) {
+        List<ProductType> response = productTypeService.getProductTypes(searchTerm, Optional.ofNullable(category));
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
