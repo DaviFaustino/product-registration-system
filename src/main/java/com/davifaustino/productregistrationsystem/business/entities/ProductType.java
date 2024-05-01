@@ -1,4 +1,4 @@
-package com.davifaustino.productregistrationsystem.entities;
+package com.davifaustino.productregistrationsystem.business.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

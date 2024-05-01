@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.davifaustino.productregistrationsystem.api.dtos.ErrorResponseDto;
-import com.davifaustino.productregistrationsystem.exceptions.RecordConflictException;
+import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 
 import jakarta.servlet.http.HttpServletRequest;
 

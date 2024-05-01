@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
-import com.davifaustino.productregistrationsystem.entities.ProductType;
+import com.davifaustino.productregistrationsystem.business.entities.ProductType;
 
 @Component
 public class ProductTypeMapper {

@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.davifaustino.productregistrationsystem.api.dtos.ErrorResponseDto;
 import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductTypeMapper;
-import com.davifaustino.productregistrationsystem.entities.EnumCategory;
-import com.davifaustino.productregistrationsystem.entities.ProductType;
-import com.davifaustino.productregistrationsystem.services.ProductTypeService;
+import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
+import com.davifaustino.productregistrationsystem.business.entities.ProductType;
+import com.davifaustino.productregistrationsystem.business.services.ProductTypeService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

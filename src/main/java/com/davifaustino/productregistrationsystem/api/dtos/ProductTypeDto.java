@@ -1,6 +1,6 @@
 package com.davifaustino.productregistrationsystem.api.dtos;
 
-import com.davifaustino.productregistrationsystem.entities.EnumCategory;
+import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

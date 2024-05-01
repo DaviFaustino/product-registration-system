@@ -1,4 +1,4 @@
-package com.davifaustino.productregistrationsystem.services;
+package com.davifaustino.productregistrationsystem.business.services;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.davifaustino.productregistrationsystem.entities.EnumCategory;
-import com.davifaustino.productregistrationsystem.entities.ProductType;
-import com.davifaustino.productregistrationsystem.exceptions.RecordConflictException;
-import com.davifaustino.productregistrationsystem.repositories.ProductTypeRepository;
+import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
+import com.davifaustino.productregistrationsystem.business.entities.ProductType;
+import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
+import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
 
 @Service
 public class ProductTypeService {

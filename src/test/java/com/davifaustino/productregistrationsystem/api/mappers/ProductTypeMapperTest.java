@@ -8,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
-import com.davifaustino.productregistrationsystem.entities.EnumCategory;
-import com.davifaustino.productregistrationsystem.entities.ProductType;
+import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
+import com.davifaustino.productregistrationsystem.business.entities.ProductType;
 
 @SpringBootTest(classes = ProductTypeMapper.class)
 @Import(com.davifaustino.productregistrationsystem.config.ModelMapperConfig.class)

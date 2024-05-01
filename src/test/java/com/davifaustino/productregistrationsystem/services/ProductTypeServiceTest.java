@@ -15,10 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.davifaustino.productregistrationsystem.entities.EnumCategory;
-import com.davifaustino.productregistrationsystem.entities.ProductType;
-import com.davifaustino.productregistrationsystem.exceptions.RecordConflictException;
-import com.davifaustino.productregistrationsystem.repositories.ProductTypeRepository;
+import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
+import com.davifaustino.productregistrationsystem.business.entities.ProductType;
+import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
+import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
+import com.davifaustino.productregistrationsystem.business.services.ProductTypeService;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductTypeServiceTest {

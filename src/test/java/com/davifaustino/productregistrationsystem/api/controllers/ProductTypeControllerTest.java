@@ -19,10 +19,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductTypeMapper;
-import com.davifaustino.productregistrationsystem.entities.EnumCategory;
-import com.davifaustino.productregistrationsystem.entities.ProductType;
-import com.davifaustino.productregistrationsystem.exceptions.RecordConflictException;
-import com.davifaustino.productregistrationsystem.services.ProductTypeService;
+import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
+import com.davifaustino.productregistrationsystem.business.entities.ProductType;
+import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
+import com.davifaustino.productregistrationsystem.business.services.ProductTypeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
