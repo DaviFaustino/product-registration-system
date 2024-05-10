@@ -1,4 +1,4 @@
-package com.davifaustino.productregistrationsystem.services;
+package com.davifaustino.productregistrationsystem.business.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
