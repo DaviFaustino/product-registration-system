@@ -13,6 +13,7 @@ import com.davifaustino.productregistrationsystem.business.repositories.ProductT
 
 @Service
 public class ProductTypeService {
+    
     @Autowired
     ProductTypeRepository productTypeRepository;
 
