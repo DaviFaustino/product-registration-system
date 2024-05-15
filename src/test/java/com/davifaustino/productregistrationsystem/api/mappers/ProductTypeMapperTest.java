@@ -1,5 +1,8 @@
 package com.davifaustino.productregistrationsystem.api.mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -42,5 +45,24 @@ public class ProductTypeMapperTest {
         assertEquals(productType.getCategory(), response.getCategory());
         assertEquals(productType.getAveragePriceInCents(), response.getAveragePriceInCents());
         assertEquals(productType.getFullStockFactor(), response.getFullStockFactor());
+    }
+
+    @Test
+    void testToDtoList() {
+        List<ProductType> productTypeList = new ArrayList<>();
+        productTypeList.add(new ProductType("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2));
+        productTypeList.add(new ProductType("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA,750, (short) 2));
+
+        List<ProductTypeDto> response = productTypeMapper.toDtoList(productTypeList);
+
+        response.forEach(dto -> {
+            int index = response.indexOf(dto);
+
+            assertEquals(ProductTypeDto.class, dto.getClass());
+            assertEquals(productTypeList.get(index).getName(), dto.getName());
+            assertEquals(productTypeList.get(index).getCategory(), dto.getCategory());
+            assertEquals(productTypeList.get(index).getAveragePriceInCents(), dto.getAveragePriceInCents());
+            assertEquals(productTypeList.get(index).getFullStockFactor(), dto.getFullStockFactor());
+        });
     }
 }
