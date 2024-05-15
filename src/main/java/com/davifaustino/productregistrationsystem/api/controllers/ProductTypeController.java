@@ -64,9 +64,9 @@ public class ProductTypeController {
         @ApiResponse(responseCode = "400", description = "Invalid request content")
     })
     @GetMapping
-    public ResponseEntity<List<ProductType>> getProductTypes(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) EnumCategory category) {
+    public ResponseEntity<List<ProductTypeDto>> getProductTypes(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) EnumCategory category) {
         List<ProductType> response = productTypeService.getProductTypes(searchTerm, Optional.ofNullable(category));
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(productTypeMapper.toDtoList(response));
     }
 }
