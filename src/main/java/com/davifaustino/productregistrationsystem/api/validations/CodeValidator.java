@@ -15,7 +15,7 @@ public class CodeValidator implements ConstraintValidator<ProductCode, String> {
         code = code.replace(" ", "");
 
         try {
-            Integer.parseInt(code);
+            Long.parseLong(code);
 
         } catch (NumberFormatException e) {
             context.disableDefaultConstraintViolation();
@@ -34,8 +34,6 @@ public class CodeValidator implements ConstraintValidator<ProductCode, String> {
             digitsSum += Integer.parseInt(digits[i]) * multiplicationFactor;
         }
 
-        System.out.println(digitsSum);
-
         //Calculate check digit
         int checkDigit;
         if (digitsSum % 10 == 0) {
@@ -43,8 +41,6 @@ public class CodeValidator implements ConstraintValidator<ProductCode, String> {
         } else {
             checkDigit = (digitsSum / 10 * 10 + 10) - digitsSum;
         }
-
-        System.out.println(checkDigit);
 
         //Check if the check digit is correct
         if (String.valueOf(checkDigit).equals(digits[lastDigitsIndex])) {

@@ -38,7 +38,7 @@ public class ProductCodeTest {
     @Test
     @DisplayName("Validation must not be violated")
     void productCodeTest2() {
-        testClass = new InnerTestClass("  11111610");
+        testClass = new InnerTestClass("7896354627580");
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<InnerTestClass>> violations = validator.validate(testClass);
