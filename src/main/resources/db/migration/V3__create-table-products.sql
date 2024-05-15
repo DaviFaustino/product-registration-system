@@ -1,6 +1,6 @@
 CREATE TABLE tb_products (
     code varchar(13) PRIMARY KEY NOT NULL UNIQUE,
-    product_type_name varchar(32) REFERENCES tb_product_types NOT NULL ON UPDATE CASCADE ON DELETE CASCADE,
+    product_type_name varchar(32) REFERENCES tb_product_types ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
     name varchar(42) NOT NULL,
     description text,
     purchase_price_in_cents int NOT NULL,
