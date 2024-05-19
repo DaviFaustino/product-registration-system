@@ -14,16 +14,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductRepository;
+import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
 
     @Mock
     ProductRepository productRepository;
+
+    @Mock
+    ProductTypeRepository productTypeRepository;
 
     @InjectMocks
     ProductService productService;
@@ -51,6 +56,7 @@ public class ProductServiceTest {
 
         when(productRepository.existsById(any())).thenReturn(false);
         when(productRepository.save(any(Product.class))).thenReturn(product);
+        when(productTypeRepository.existsById(any())).thenReturn(true);
 
         Product productReturn = productService.saveProduct(product);
 
@@ -68,6 +74,7 @@ public class ProductServiceTest {
         when(productRepository.existsById(any())).thenReturn(false);
         when(productRepository.save(any(Product.class))).thenReturn(product);
         when(productRepository.findByCodeContaining(any())).thenReturn(productList);
+        when(productTypeRepository.existsById(any())).thenReturn(true);
 
         Product productReturn = productService.saveProduct(product);
 
@@ -78,12 +85,23 @@ public class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Must throw an error when trying to save a product to the database")
+    @DisplayName("Must throw an RecordConflictException when trying to save a product to the database")
     void testSaveProduct3() {
         product.setCode("1111111111111");
 
         when(productRepository.existsById(any())).thenReturn(true);
 
         assertThrows(RecordConflictException.class, () -> productService.saveProduct(product));
+    }
+
+    @Test
+    @DisplayName("Must throw an DataIntegrityViolationException when trying to save a product to the database")
+    void testSaveProduct4() {
+        product.setCode("1111111111111");
+
+        when(productRepository.existsById(any())).thenReturn(false);
+        when(productTypeRepository.existsById(any())).thenReturn(false);
+
+        assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product));
     }
 }
