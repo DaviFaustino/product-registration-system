@@ -3,17 +3,22 @@ package com.davifaustino.productregistrationsystem.business.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductRepository;
+import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
 
 @Service
 public class ProductService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    ProductTypeRepository productTypeRepository;
 
     public Product saveProduct(Product product) {
         if (product.getCode() == null) {
@@ -26,6 +31,18 @@ public class ProductService {
 
             throw new RecordConflictException("The Product already exists in the database");
         }
+
+        String errorMessage = "";
+
+        if (!productTypeRepository.existsById(product.getProductTypeName())) {
+
+            errorMessage = "The product type entered doesn't exist in the database";
+        }
+        if (!errorMessage.equals("")) {
+
+            throw new DataIntegrityViolationException(errorMessage);
+        }
+
         return productRepository.save(product);
     }
 
