@@ -11,6 +11,9 @@ public class CodeValidator implements ConstraintValidator<ProductCode, String> {
     @Override
     public boolean isValid(String code, ConstraintValidatorContext context) {
 
+        //Allow code to be null
+        if (code == null) { return true; }
+
         //Check if the entered string is a number
         code = code.replace(" ", "");
 
