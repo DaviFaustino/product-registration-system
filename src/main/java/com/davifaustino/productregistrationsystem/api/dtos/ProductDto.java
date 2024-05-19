@@ -3,10 +3,10 @@ package com.davifaustino.productregistrationsystem.api.dtos;
 import java.sql.Timestamp;
 
 import com.davifaustino.productregistrationsystem.api.validations.ProductCode;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,20 +18,19 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductDto {
 
-    @Max(value = 13)
-    @Min(value = 4)
+    @Size(min = 4, max = 13)
     @ProductCode
     String code;
 
     @NotNull
-    @Max(value = 32)
+    @Size(max = 32)
     String productTypeName;
 
     @NotNull
-    @Max(value = 42)
+    @Size(min = 3, max = 42)
     String name;
 
-    @Max(value = 256)
+    @Size(max = 256)
     String description;
 
     @NotNull
@@ -45,6 +44,7 @@ public class ProductDto {
     Integer previousSalePriceInCents;
 
     @NotNull
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
     Timestamp priceUpdateDate;
 
     @NotNull
