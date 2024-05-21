@@ -11,4 +11,6 @@ import com.davifaustino.productregistrationsystem.business.entities.Product;
 public interface ProductRepository extends JpaRepository<Product, String> {
     
     ArrayList<Product> findByCodeContaining(String fragment);
+
+    boolean existsByName(String name);
 }

@@ -38,6 +38,10 @@ public class ProductService {
 
             errorMessage = "The product type entered doesn't exist in the database";
         }
+        if (productRepository.existsByName(product.getName())) {
+
+            errorMessage = "The product name entered already exists in the database";
+        }
         if (!errorMessage.equals("")) {
 
             throw new DataIntegrityViolationException(errorMessage);
