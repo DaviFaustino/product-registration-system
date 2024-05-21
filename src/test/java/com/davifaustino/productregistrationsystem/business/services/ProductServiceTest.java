@@ -95,13 +95,14 @@ public class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Must throw an DataIntegrityViolationException when trying to save a product to the database")
+    @DisplayName("Must throw an DataIntegrityViolationException when trying to save a product to the database because the product type doesn't exist")
     void testSaveProduct4() {
         product.setCode("1111111111111");
 
         when(productRepository.existsById(any())).thenReturn(false);
         when(productTypeRepository.existsById(any())).thenReturn(false);
 
-        assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product));
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product));
+        assertTrue(exception.getMessage().equals("The product type entered doesn't exist in the database"));
     }
 }
