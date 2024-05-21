@@ -105,4 +105,17 @@ public class ProductServiceTest {
         DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product));
         assertTrue(exception.getMessage().equals("The product type entered doesn't exist in the database"));
     }
+
+    @Test
+    @DisplayName("Must throw an DataIntegrityViolationException when trying to save a product to the database because the name isn't unique")
+    void testSaveProduct5() {
+        product.setCode("1111111111118");
+
+        when(productRepository.existsById(any())).thenReturn(false);
+        when(productTypeRepository.existsById(any())).thenReturn(true);
+        when(productRepository.existsByName(any())).thenReturn(true);
+
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product));
+        assertTrue(exception.getMessage().equals("The product name entered already exists in the database"));
+    }
 }
