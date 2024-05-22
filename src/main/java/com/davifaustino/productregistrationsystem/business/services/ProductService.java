@@ -1,5 +1,6 @@
 package com.davifaustino.productregistrationsystem.business.services;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class ProductService {
 
             throw new DataIntegrityViolationException(errorMessage);
         }
+
+        product.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
 
         return productRepository.save(product);
     }

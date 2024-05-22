@@ -8,10 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -76,8 +72,7 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.previousPurchasePriceInCents", is(product.getPreviousPurchasePriceInCents())))
                 .andExpect(jsonPath("$.salePriceInCents", is(product.getSalePriceInCents())))
                 .andExpect(jsonPath("$.previousSalePriceInCents", is(product.getPreviousSalePriceInCents())))
-                .andExpect(jsonPath("$.priceUpdateDate", is(LocalDateTime.ofInstant(Instant.ofEpochMilli(product.getPriceUpdateDate().getTime()), ZoneOffset.UTC)
-                                                                                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")))))
+                .andExpect(jsonPath("$.priceUpdateDate", is(product.getPriceUpdateDate().getTime())))
                 .andExpect(jsonPath("$.fullStock", is(product.getFullStock())));
         
         verify(productService).saveProduct(any());
