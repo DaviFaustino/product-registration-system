@@ -69,4 +69,13 @@ public class ProductTypeController {
 
         return ResponseEntity.status(HttpStatus.OK).body(productTypeMapper.toDtoList(response));
     }
+
+    @Operation(summary = "Get a list of product type names")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Response successfully received")
+    })
+    @GetMapping("/names")
+    public ResponseEntity<List<String>> getProductTypeNames() {
+        return ResponseEntity.status(HttpStatus.OK).body(productTypeService.getProductTypeNames());
+    }
 }
