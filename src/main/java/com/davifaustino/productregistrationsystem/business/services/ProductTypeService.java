@@ -32,4 +32,8 @@ public class ProductTypeService {
         }
         return productTypeRepository.findByNameIgnoreCaseContaining(searchTerm);
     }
+
+    public List<String> getProductTypeNames() {
+        return productTypeRepository.findAllProductTypeNames();
+    }
 }
