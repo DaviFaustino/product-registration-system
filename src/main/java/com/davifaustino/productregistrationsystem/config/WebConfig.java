@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${FRONTEND_URL:http://localhost:80}")
     private String frontendURL;
     
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(@SuppressWarnings("null") CorsRegistry registry) {
         registry.addMapping("/**").allowedOrigins(frontendURL);
     }
 }
