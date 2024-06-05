@@ -1,13 +1,16 @@
 package com.davifaustino.productregistrationsystem.business.services;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.davifaustino.productregistrationsystem.business.entities.Product;
+import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductRepository;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
@@ -51,6 +54,28 @@ public class ProductService {
         product.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
 
         return productRepository.save(product);
+    }
+
+    public List<Product> getProducts(String searchTerm, Optional<String> opProductTypeName) {
+        
+        if (searchTerm.matches("^[0-9]+$")) {
+            if (searchTerm.length() > 3 && searchTerm.length() < 14) {
+
+                return Arrays.asList(productRepository.findByCode(searchTerm).get());
+            } else {
+                throw new InvalidSearchException("Code size out of range");
+            }
+        }
+
+        if (opProductTypeName.isPresent()) {
+
+            return productRepository.findByNameIgnoreCaseContainingAndProductTypeName(searchTerm, opProductTypeName.get());
+        }
+        if (searchTerm.replace(" ", "").length() == 0) {
+
+            throw new InvalidSearchException("No search parameters provided");
+        }
+        return productRepository.findByNameIgnoreCaseContaining(searchTerm);
     }
 
     private String getNewCode() {
