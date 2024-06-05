@@ -6,6 +6,9 @@ import static org.mockito.Mockito.*;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import com.davifaustino.productregistrationsystem.business.entities.Product;
+import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductRepository;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
@@ -117,5 +121,65 @@ public class ProductServiceTest {
 
         DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product));
         assertTrue(exception.getMessage().equals("The product name entered already exists in the database"));
+    }
+
+    @Test
+    @DisplayName("Must get a list of products by code successfully")
+    void testGetProducts1() {
+        when(productRepository.findByCode(any())).thenReturn(Optional.of(product));
+        
+        List<Product> listReturn = productService.getProducts("1113", Optional.ofNullable(null));
+
+        assertTrue(listReturn.size() != 0);
+        verify(productRepository, times(1)).findByCode(any());
+    }
+
+    @Test
+    @DisplayName("Must get a list of products by code successfully")
+    void testGetProducts2() {
+        when(productRepository.findByCode(any())).thenReturn(Optional.of(product));
+        
+        List<Product> listReturn = productService.getProducts("1113", Optional.of("Arroz"));
+
+        assertTrue(listReturn.size() != 0);
+        verify(productRepository, times(1)).findByCode(any());
+    }
+
+    @Test
+    @DisplayName("Must throw an InvalidSearchException")
+    void testGetProducts3() {
+        InvalidSearchException exception = assertThrows(InvalidSearchException.class, () -> productService.getProducts("123", Optional.ofNullable(null)));
+
+        assertTrue(exception.getMessage().equals("Code size out of range"));
+    }
+
+    @Test
+    @DisplayName("Must get a list of products by name and product type name successfully")
+    void testGetProducts4() {
+        when(productRepository.findByNameIgnoreCaseContainingAndProductTypeName(any(), any())).thenReturn(Arrays.asList(product));
+
+        List<Product> listReturn = productService.getProducts("Arroz", Optional.of("Arroz"));
+
+        assertTrue(listReturn.size() != 0);
+        verify(productRepository, times(1)).findByNameIgnoreCaseContainingAndProductTypeName(any(), any());
+    }
+
+    @Test
+    @DisplayName("Must get a list of products by name successfully")
+    void testGetProducts5() {
+        when(productRepository.findByNameIgnoreCaseContaining(any())).thenReturn(Arrays.asList(product));
+
+        List<Product> listReturn = productService.getProducts("Arroz", Optional.ofNullable(null));
+
+        assertTrue(listReturn.size() != 0);
+        verify(productRepository, times(1)).findByNameIgnoreCaseContaining(any());
+    }
+
+    @Test
+    @DisplayName("Must throw an InvalidSearchException")
+    void testGetProducts6() {
+        InvalidSearchException exception = assertThrows(InvalidSearchException.class, () -> productService.getProducts("   ", Optional.ofNullable(null)));
+
+        assertTrue(exception.getMessage().equals("No search parameters provided"));
     }
 }
