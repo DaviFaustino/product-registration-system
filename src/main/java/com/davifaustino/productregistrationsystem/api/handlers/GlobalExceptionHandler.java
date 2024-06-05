@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.davifaustino.productregistrationsystem.api.dtos.ErrorResponseDto;
+import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,6 +42,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponseDto> handleDataIntegrityViolationException(DataIntegrityViolationException e, HttpServletRequest request) {
+        ErrorResponseDto errorResponse = new ErrorResponseDto(e.getMessage(), new Timestamp(System.currentTimeMillis()), request.getRequestURI(), request.getMethod());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidSearchException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidSearchException(InvalidSearchException e, HttpServletRequest request) {
         ErrorResponseDto errorResponse = new ErrorResponseDto(e.getMessage(), new Timestamp(System.currentTimeMillis()), request.getRequestURI(), request.getMethod());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
