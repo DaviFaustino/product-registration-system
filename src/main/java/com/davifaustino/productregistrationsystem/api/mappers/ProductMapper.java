@@ -1,5 +1,8 @@
 package com.davifaustino.productregistrationsystem.api.mappers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,5 +22,9 @@ public class ProductMapper {
 
     public ProductDto toDto(Product entity) {
         return modelMapper.map(entity, ProductDto.class);
+    }
+
+    public List<ProductDto> toDtoList(List<Product> entityList) {
+        return entityList.stream().map(this::toDto).collect(Collectors.toList());
     }
 }
