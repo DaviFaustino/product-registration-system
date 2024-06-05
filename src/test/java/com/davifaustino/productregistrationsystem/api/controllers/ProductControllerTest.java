@@ -8,7 +8,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.davifaustino.productregistrationsystem.api.dtos.ProductDto;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductMapper;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
+import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.services.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -129,5 +133,39 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.method", is("POST")));
 
         verify(productMapper, VerificationModeFactory.times(0)).toDto(any());
+    }
+
+    @Test
+    @DisplayName("Must respond with a product list successfully")
+    void testGetProducts1() throws Exception {
+        List<Product> productList = new ArrayList<>();
+        List<ProductDto> productDtoList = new ArrayList<>();
+        productList.add(product);
+        productDtoList.add(productDto);
+
+        when(productService.getProducts(any(), any())).thenReturn(productList);
+        when(productMapper.toDtoList(productList)).thenReturn(productDtoList);
+
+        mockMvc.perform(get("/products")
+                        .param("searchTerm", "Arroz")
+                        .param("productTypeName", "Arroz")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(Matchers.startsWith("[")));
+    }
+
+    @Test
+    @DisplayName("Must respond with an error message")
+    void testGetProducts2() throws Exception {
+        when(productService.getProducts(any(), any())).thenThrow(new InvalidSearchException("Exception"));
+
+        mockMvc.perform(get("/products")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("searchTerm", ""))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("Exception")))
+                .andExpect(jsonPath("$.time", notNullValue()))
+                .andExpect(jsonPath("$.path", is("/products")))
+                .andExpect(jsonPath("$.method", is("GET")));
     }
 }
