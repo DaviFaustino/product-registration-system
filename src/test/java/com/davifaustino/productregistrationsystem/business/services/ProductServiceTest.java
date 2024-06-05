@@ -148,7 +148,7 @@ public class ProductServiceTest {
     @Test
     @DisplayName("Must throw an InvalidSearchException")
     void testGetProducts3() {
-        InvalidSearchException exception = assertThrows(InvalidSearchException.class, () -> productService.getProducts("123", Optional.ofNullable(null)));
+        InvalidSearchException exception = assertThrows(InvalidSearchException.class, () -> productService.getProducts("12", Optional.ofNullable(null)));
 
         assertTrue(exception.getMessage().equals("Code size out of range"));
     }
