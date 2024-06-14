@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.business.entities.ProductType;
+import com.davifaustino.productregistrationsystem.business.exceptions.NonExistingRecordException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
 
@@ -30,10 +32,12 @@ public class ProductTypeServiceTest {
     ProductTypeService productTypeService;
 
     ProductType productType;
+    Map<String, Object> productTypeUpdates;
 
     @BeforeEach
     void setup() {
         productType = new ProductType("Sabão em barra", EnumCategory.LIMPEZA_E_HIGIENE, null, (short) 2);
+        productTypeUpdates = Map.of("name", "Sabão em pó", "fullStockFactor", (short) 1);
     }
 
     @Test
@@ -75,5 +79,21 @@ public class ProductTypeServiceTest {
         assertNotNull(serviceReturn);
         verify(productTypeRepository, times(1)).findByNameIgnoreCaseContainingAndCategory(any(), any());
         verify(productTypeRepository, times(0)).findByNameIgnoreCaseContaining(any());
+    }
+
+    @Test
+    @DisplayName("Must update the product type successfully")
+    void testUpdateProductType1() {
+        when(productTypeRepository.findById(any())).thenReturn(Optional.of(productType));
+
+        assertDoesNotThrow(() -> productTypeService.updateProductType("Biscoito", productTypeUpdates));
+    }
+
+    @Test
+    @DisplayName("Must throw an exception when trying to update the product type")
+    void testUpdateProductType2() {
+        when(productTypeRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+
+        assertThrows(NonExistingRecordException.class, () -> productTypeService.updateProductType("Biscoito", productTypeUpdates));
     }
 }
