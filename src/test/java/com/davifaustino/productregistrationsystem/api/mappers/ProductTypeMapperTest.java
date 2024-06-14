@@ -2,6 +2,7 @@ package com.davifaustino.productregistrationsystem.api.mappers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,9 +14,11 @@ import org.springframework.context.annotation.Import;
 import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
 import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.business.entities.ProductType;
+import com.davifaustino.productregistrationsystem.config.ModelMapperConfig;
+import com.davifaustino.productregistrationsystem.config.ObjectMapperConfig;
 
 @SpringBootTest(classes = ProductTypeMapper.class)
-@Import(com.davifaustino.productregistrationsystem.config.ModelMapperConfig.class)
+@Import({ModelMapperConfig.class, ObjectMapperConfig.class})
 public class ProductTypeMapperTest {
 
     @Autowired
@@ -64,5 +67,17 @@ public class ProductTypeMapperTest {
             assertEquals(productTypeList.get(index).getAveragePriceInCents(), dto.getAveragePriceInCents());
             assertEquals(productTypeList.get(index).getFullStockFactor(), dto.getFullStockFactor());
         });
+    }
+
+    @Test
+    void testToMap() {
+        ProductTypeDto productTypeDto = new ProductTypeDto("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2);
+        
+        Map<String, Object> response = productTypeMapper.toMap(productTypeDto);
+
+        assertEquals(productTypeDto.getName(), response.get("name"));
+        assertEquals(productTypeDto.getCategory().toString(), response.get("category").toString());
+        assertEquals(productTypeDto.getAveragePriceInCents(), response.get("averagePriceInCents"));
+        assertEquals(productTypeDto.getFullStockFactor(), response.get("fullStockFactor"));
     }
 }
