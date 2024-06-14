@@ -22,5 +22,5 @@ public class ProductTypeDto {
     Integer averagePriceInCents;
 
     @NotNull
-    short fullStockFactor;
+    Short fullStockFactor;
 }

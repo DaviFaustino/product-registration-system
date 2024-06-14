@@ -29,5 +29,5 @@ public class ProductType {
     private Integer averagePriceInCents;
 
     @Column(name = "full_stock_factor")
-    private short fullStockFactor;
+    private Short fullStockFactor;
 }
