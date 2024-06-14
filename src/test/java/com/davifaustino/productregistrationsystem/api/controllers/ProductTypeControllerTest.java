@@ -6,6 +6,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.Map;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +23,7 @@ import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductTypeMapper;
 import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.business.entities.ProductType;
+import com.davifaustino.productregistrationsystem.business.exceptions.NonExistingRecordException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.services.ProductTypeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,12 +45,14 @@ public class ProductTypeControllerTest {
     private ProductTypeDto productTypeDto;
     private String dtoRequestAsJson;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private Map<String, Object> productTypeUpdates;
 
     @BeforeEach
     void setup() throws JsonProcessingException {
         productType = new ProductType("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA, 750, (short) 1);
         productTypeDto = new ProductTypeDto("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA, 750, (short) 1);
         dtoRequestAsJson = objectMapper.writeValueAsString(productTypeDto);
+        productTypeUpdates = Map.of("name", "Sabão em pó", "fullStockFactor", (short) 1);
     }
 
     @Test
@@ -131,5 +136,44 @@ public class ProductTypeControllerTest {
                 .andExpect(jsonPath("$.method", is("GET")));
 
         verify(productTypeService, times(0)).getProductTypes(any(), any());
+    }
+
+    @Test
+    @DisplayName("Must update the product type successfully")
+    void testUpdateProductType1() throws Exception {
+        when(productTypeMapper.toMap(productTypeDto)).thenReturn(productTypeUpdates);
+        when(productTypeService.updateProductType(any(), any())).thenReturn(1);
+
+        mockMvc.perform(patch("/product-types/{name}", "product")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoRequestAsJson))
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    @DisplayName("Must respond with an error message and status 404")
+    void testUpdateProductType2() throws Exception {
+        when(productTypeMapper.toMap(productTypeDto)).thenReturn(productTypeUpdates);
+        when(productTypeService.updateProductType(any(), any())).thenThrow(NonExistingRecordException.class);
+
+        mockMvc.perform(patch("/product-types/{name}", "product")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dtoRequestAsJson))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Must respond with an error message and status 404")
+    void testUpdateProductType3() throws Exception {
+        when(productTypeMapper.toMap(productTypeDto)).thenReturn(productTypeUpdates);
+        when(productTypeService.updateProductType(any(), any())).thenThrow(NonExistingRecordException.class);
+
+        mockMvc.perform(patch("/product-types/{name}", "product")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isNotFound());
     }
 }

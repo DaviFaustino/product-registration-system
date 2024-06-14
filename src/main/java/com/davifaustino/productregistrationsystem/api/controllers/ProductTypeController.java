@@ -28,6 +28,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -77,5 +79,17 @@ public class ProductTypeController {
     @GetMapping("/names")
     public ResponseEntity<List<String>> getProductTypeNames() {
         return ResponseEntity.status(HttpStatus.OK).body(productTypeService.getProductTypeNames());
+    }
+
+    @Operation(summary = "Update a product type")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "202", description = "Response successfully accepted"),
+        @ApiResponse(responseCode = "404", description = "Product type not found")
+    })
+    @PatchMapping("/{name}")
+    public ResponseEntity<Integer> updateProductType(@PathVariable(value = "name") String name, @RequestBody ProductTypeDto dto) {
+        Integer response = productTypeService.updateProductType(name, productTypeMapper.toMap(dto));
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 }

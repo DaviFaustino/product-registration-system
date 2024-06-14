@@ -12,6 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.davifaustino.productregistrationsystem.api.dtos.ErrorResponseDto;
 import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
+import com.davifaustino.productregistrationsystem.business.exceptions.NonExistingRecordException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,5 +53,12 @@ public class GlobalExceptionHandler {
         ErrorResponseDto errorResponse = new ErrorResponseDto(e.getMessage(), new Timestamp(System.currentTimeMillis()), request.getRequestURI(), request.getMethod());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(NonExistingRecordException.class)
+    public ResponseEntity<ErrorResponseDto> handleNonExistingRecordException(NonExistingRecordException e, HttpServletRequest request) {
+        ErrorResponseDto errorResponse = new ErrorResponseDto(e.getMessage(), new Timestamp(System.currentTimeMillis()), request.getRequestURI(), request.getMethod());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 }
