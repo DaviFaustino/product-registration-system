@@ -63,4 +63,12 @@ public class ProductTypeService {
         
         return productTypeRepository.updateByName(id, updatedProductType);
     }
+
+    @Transactional
+    public void deleteProductType(String id) {
+        if (!productTypeRepository.existsById(id)) {
+            throw new NonExistingRecordException("Product type not found");
+        }
+        productTypeRepository.deleteById(id);
+    }
 }
