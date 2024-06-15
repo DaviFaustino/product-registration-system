@@ -3,8 +3,9 @@ package com.davifaustino.productregistrationsystem.api.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.davifaustino.productregistrationsystem.api.dtos.ErrorResponseDto;
-import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductTypeRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ErrorResponse;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductTypeResponse;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductTypeMapper;
 import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.business.entities.ProductType;
@@ -47,17 +48,17 @@ public class ProductTypeController {
     @Operation(summary = "Create a new product type")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Product type saved successfully",
-                    content = {@Content(schema = @Schema(implementation =  ProductTypeDto.class))}),
+                    content = {@Content(schema = @Schema(implementation =  ProductTypeResponse.class))}),
         @ApiResponse(responseCode = "400", description = "Invalid request content",
-                    content = {@Content(schema = @Schema(implementation =  ErrorResponseDto.class))}),
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))}),
         @ApiResponse(responseCode = "409", description = "Product type already exists in the database",
-                    content = {@Content(schema = @Schema(implementation =  ErrorResponseDto.class))})
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductTypeDto> saveProductType (@RequestBody @Valid ProductTypeDto dto) {
-        ProductType response = productTypeService.saveProductType(productTypeMapper.toEntity(dto));
+    public ResponseEntity<ProductTypeResponse> saveProductType (@RequestBody @Valid ProductTypeRequest request) {
+        ProductType serviceResponse = productTypeService.saveProductType(productTypeMapper.toEntity(request));
         
-        return ResponseEntity.status(HttpStatus.CREATED).body(productTypeMapper.toDto(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productTypeMapper.toResponse(serviceResponse));
     }
 
     @Operation(summary = "Get a list of product types")
@@ -66,10 +67,10 @@ public class ProductTypeController {
         @ApiResponse(responseCode = "400", description = "Invalid request content")
     })
     @GetMapping
-    public ResponseEntity<List<ProductTypeDto>> getProductTypes(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) EnumCategory category) {
-        List<ProductType> response = productTypeService.getProductTypes(searchTerm, Optional.ofNullable(category));
+    public ResponseEntity<List<ProductTypeResponse>> getProductTypes(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) EnumCategory category) {
+        List<ProductType> serviceResponse = productTypeService.getProductTypes(searchTerm, Optional.ofNullable(category));
 
-        return ResponseEntity.status(HttpStatus.OK).body(productTypeMapper.toDtoList(response));
+        return ResponseEntity.status(HttpStatus.OK).body(productTypeMapper.toResponseList(serviceResponse));
     }
 
     @Operation(summary = "Get a list of product type names")
@@ -87,9 +88,9 @@ public class ProductTypeController {
         @ApiResponse(responseCode = "404", description = "Product type not found")
     })
     @PatchMapping("/{name}")
-    public ResponseEntity<Integer> updateProductType(@PathVariable(value = "name") String name, @RequestBody ProductTypeDto dto) {
-        Integer response = productTypeService.updateProductType(name, productTypeMapper.toMap(dto));
+    public ResponseEntity<Integer> updateProductType(@PathVariable(value = "name") String name, @RequestBody ProductTypeRequest request) {
+        Integer serviceResponse = productTypeService.updateProductType(name, productTypeMapper.toMap(request));
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(serviceResponse);
     }
 }

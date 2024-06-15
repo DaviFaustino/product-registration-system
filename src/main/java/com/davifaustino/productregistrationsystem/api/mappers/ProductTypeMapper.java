@@ -8,7 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductTypeRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductTypeResponse;
 import com.davifaustino.productregistrationsystem.business.entities.ProductType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,19 +23,19 @@ public class ProductTypeMapper {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public ProductType toEntity(ProductTypeDto dto) {
-        return modelMapper.map(dto, ProductType.class);
+    public ProductType toEntity(ProductTypeRequest request) {
+        return modelMapper.map(request, ProductType.class);
     }
 
-    public ProductTypeDto toDto(ProductType entity) {
-        return modelMapper.map(entity, ProductTypeDto.class);
+    public ProductTypeResponse toResponse(ProductType entity) {
+        return modelMapper.map(entity, ProductTypeResponse.class);
     }
 
-    public List<ProductTypeDto> toDtoList(List<ProductType> entityList) {
-        return entityList.stream().map(this::toDto).collect(Collectors.toList());
+    public List<ProductTypeResponse> toResponseList(List<ProductType> entityList) {
+        return entityList.stream().map(this::toResponse).collect(Collectors.toList());
     }
 
-    public Map<String, Object> toMap(ProductTypeDto dto) {
-        return objectMapper.convertValue(dto, new TypeReference<Map<String, Object>>() {});
+    public Map<String, Object> toMap(ProductTypeRequest request) {
+        return objectMapper.convertValue(request, new TypeReference<Map<String, Object>>() {});
     }
 }

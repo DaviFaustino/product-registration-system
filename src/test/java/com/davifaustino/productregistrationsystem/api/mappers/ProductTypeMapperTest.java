@@ -11,7 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
-import com.davifaustino.productregistrationsystem.api.dtos.ProductTypeDto;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductTypeRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductTypeResponse;
 import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.business.entities.ProductType;
 import com.davifaustino.productregistrationsystem.config.ModelMapperConfig;
@@ -26,58 +27,54 @@ public class ProductTypeMapperTest {
 
     @Test
     void testToEntity() {
-        ProductTypeDto productTypeDto = new ProductTypeDto("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2);
+        ProductTypeRequest productTypeRequest = new ProductTypeRequest("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA, (short) 2);
         
-        ProductType response = productTypeMapper.toEntity(productTypeDto);
+        ProductType mapperResponse = productTypeMapper.toEntity(productTypeRequest);
 
-        assertEquals(ProductType.class, response.getClass());
-        assertEquals(productTypeDto.getName(), response.getName());
-        assertEquals(productTypeDto.getCategory(), response.getCategory());
-        assertEquals(productTypeDto.getAveragePriceInCents(), response.getAveragePriceInCents());
-        assertEquals(productTypeDto.getFullStockFactor(), response.getFullStockFactor());
+        assertEquals(productTypeRequest.getName(), mapperResponse.getName());
+        assertEquals(productTypeRequest.getCategory(), mapperResponse.getCategory());
+        assertEquals(productTypeRequest.getFullStockFactor(), mapperResponse.getFullStockFactor());
     }
 
     @Test
-    void testToDto() {
+    void testToResponse() {
         ProductType productType = new ProductType("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2);
 
-        ProductTypeDto response = productTypeMapper.toDto(productType);
+        ProductTypeResponse mapperResponse = productTypeMapper.toResponse(productType);
 
-        assertEquals(ProductTypeDto.class, response.getClass());
-        assertEquals(productType.getName(), response.getName());
-        assertEquals(productType.getCategory(), response.getCategory());
-        assertEquals(productType.getAveragePriceInCents(), response.getAveragePriceInCents());
-        assertEquals(productType.getFullStockFactor(), response.getFullStockFactor());
+        assertEquals(productType.getName(), mapperResponse.getName());
+        assertEquals(productType.getCategory(), mapperResponse.getCategory());
+        assertEquals(productType.getAveragePriceInCents(), mapperResponse.getAveragePriceInCents());
+        assertEquals(productType.getFullStockFactor(), mapperResponse.getFullStockFactor());
     }
 
     @Test
-    void testToDtoList() {
+    void testToResponseList() {
         List<ProductType> productTypeList = new ArrayList<>();
         productTypeList.add(new ProductType("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2));
         productTypeList.add(new ProductType("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA,750, (short) 2));
 
-        List<ProductTypeDto> response = productTypeMapper.toDtoList(productTypeList);
+        List<ProductTypeResponse> mapperResponses = productTypeMapper.toResponseList(productTypeList);
 
-        response.forEach(dto -> {
-            int index = response.indexOf(dto);
+        mapperResponses.forEach(response -> {
+            int index = mapperResponses.indexOf(response);
 
-            assertEquals(ProductTypeDto.class, dto.getClass());
-            assertEquals(productTypeList.get(index).getName(), dto.getName());
-            assertEquals(productTypeList.get(index).getCategory(), dto.getCategory());
-            assertEquals(productTypeList.get(index).getAveragePriceInCents(), dto.getAveragePriceInCents());
-            assertEquals(productTypeList.get(index).getFullStockFactor(), dto.getFullStockFactor());
+            assertEquals(ProductTypeResponse.class, response.getClass());
+            assertEquals(productTypeList.get(index).getName(), response.getName());
+            assertEquals(productTypeList.get(index).getCategory(), response.getCategory());
+            assertEquals(productTypeList.get(index).getAveragePriceInCents(), response.getAveragePriceInCents());
+            assertEquals(productTypeList.get(index).getFullStockFactor(), response.getFullStockFactor());
         });
     }
 
     @Test
     void testToMap() {
-        ProductTypeDto productTypeDto = new ProductTypeDto("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2);
+        ProductTypeRequest productTypeRequest = new ProductTypeRequest("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA, (short) 2);
         
-        Map<String, Object> response = productTypeMapper.toMap(productTypeDto);
+        Map<String, Object> response = productTypeMapper.toMap(productTypeRequest);
 
-        assertEquals(productTypeDto.getName(), response.get("name"));
-        assertEquals(productTypeDto.getCategory().toString(), response.get("category").toString());
-        assertEquals(productTypeDto.getAveragePriceInCents(), response.get("averagePriceInCents"));
-        assertEquals(productTypeDto.getFullStockFactor(), response.get("fullStockFactor"));
+        assertEquals(productTypeRequest.getName(), response.get("name"));
+        assertEquals(productTypeRequest.getCategory().toString(), response.get("category").toString());
+        assertEquals(productTypeRequest.getFullStockFactor(), response.get("fullStockFactor"));
     }
 }
