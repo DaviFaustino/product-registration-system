@@ -29,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -101,5 +102,20 @@ public class ProductTypeController {
         Integer serviceResponse = productTypeService.updateProductType(name, productTypeMapper.toMap(request));
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(serviceResponse);
+    }
+
+
+    @Operation(summary = "Delete a product type")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Product successfully deleted",
+                    content = {@Content(schema = @Schema(implementation =  Integer.class))}),
+        @ApiResponse(responseCode = "404", description = "Product type not found",
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
+    })
+    @DeleteMapping("/{name}")
+    public ResponseEntity<Void> deleteProductType(@PathVariable(value = "name") String name) {
+        productTypeService.deleteProductType(name);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
