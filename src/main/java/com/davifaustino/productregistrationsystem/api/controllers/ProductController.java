@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.davifaustino.productregistrationsystem.api.dtos.ErrorResponseDto;
-import com.davifaustino.productregistrationsystem.api.dtos.ProductDto;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ErrorResponse;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductMapper;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.services.ProductService;
@@ -43,17 +44,17 @@ public class ProductController {
     @Operation(summary = "Create a new product")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Product saved successfully",
-                    content = {@Content(schema = @Schema(implementation =  ProductDto.class))}),
+                    content = {@Content(schema = @Schema(implementation =  ProductResponse.class))}),
         @ApiResponse(responseCode = "400", description = "Invalid request content",
-                    content = {@Content(schema = @Schema(implementation =  ErrorResponseDto.class))}),
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))}),
         @ApiResponse(responseCode = "409", description = "Product already exists in the database",
-                    content = {@Content(schema = @Schema(implementation =  ErrorResponseDto.class))})
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductDto> saveProduct (@RequestBody @Valid ProductDto dto) {
-        Product response = productService.saveProduct(productMapper.toEntity(dto));
+    public ResponseEntity<ProductResponse> saveProduct (@RequestBody @Valid ProductRequest request) {
+        Product serviceResponse = productService.saveProduct(productMapper.toEntity(request));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toDto(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toResponse(serviceResponse));
     }
 
     @Operation(summary = "Get a list of products")
@@ -62,9 +63,9 @@ public class ProductController {
         @ApiResponse(responseCode = "400", description = "Invalid request content")
     })
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getProducts(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) String productTypeName) {
-        List<Product> response = productService.getProducts(searchTerm, Optional.ofNullable(productTypeName));
+    public ResponseEntity<List<ProductResponse>> getProducts(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) String productTypeName) {
+        List<Product> serviceResponse = productService.getProducts(searchTerm, Optional.ofNullable(productTypeName));
 
-        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toDtoList(response));
+        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toResponseList(serviceResponse));
     }
 }

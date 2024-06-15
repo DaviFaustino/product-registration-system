@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.davifaustino.productregistrationsystem.api.dtos.ProductDto;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.config.ModelMapperConfig;
 
@@ -20,39 +21,35 @@ public class ProductMapperTest {
 
     @Test
     void testToEntity() {
-        ProductDto productDto = new ProductDto("1111111111111", "a", "a", "a", 1, 1, 1, 1, new Timestamp(1), true);
+        ProductRequest productRequest = new ProductRequest("1111111111111", "a", "a", "a", 1, 1, true);
 
-        Product response = productMapper.toEntity(productDto);
+        Product mapperResponse = productMapper.toEntity(productRequest);
 
-        assertEquals(Product.class, response.getClass());
-        assertEquals(productDto.getCode(), response.getCode());
-        assertEquals(productDto.getProductTypeName(), response.getProductTypeName());
-        assertEquals(productDto.getName(), response.getName());
-        assertEquals(productDto.getDescription(), response.getDescription());
-        assertEquals(productDto.getPurchasePriceInCents(), response.getPurchasePriceInCents());
-        assertEquals(productDto.getPreviousPurchasePriceInCents(), response.getPreviousPurchasePriceInCents());
-        assertEquals(productDto.getSalePriceInCents(), response.getPreviousSalePriceInCents());
-        assertEquals(productDto.getPreviousSalePriceInCents(), response.getPreviousSalePriceInCents());
-        assertEquals(productDto.getPriceUpdateDate(), response.getPriceUpdateDate());
-        assertEquals(productDto.getFullStock(), response.getFullStock());
+        assertEquals(Product.class, mapperResponse.getClass());
+        assertEquals(productRequest.getCode(), mapperResponse.getCode());
+        assertEquals(productRequest.getProductTypeName(), mapperResponse.getProductTypeName());
+        assertEquals(productRequest.getName(), mapperResponse.getName());
+        assertEquals(productRequest.getDescription(), mapperResponse.getDescription());
+        assertEquals(productRequest.getPurchasePriceInCents(), mapperResponse.getPurchasePriceInCents());
+        assertEquals(productRequest.getSalePriceInCents(), mapperResponse.getSalePriceInCents());
+        assertEquals(productRequest.getFullStock(), mapperResponse.getFullStock());
     }
     
     @Test
-    void testToDto() {
+    void testToResponse() {
         Product product = new Product("1111111111111", "a", "a", "a", 1, 1, 1, 1, new Timestamp(1), true);
 
-        ProductDto response = productMapper.toDto(product);
+        ProductResponse mapperResponse = productMapper.toResponse(product);
 
-        assertEquals(ProductDto.class, response.getClass());
-        assertEquals(product.getCode(), response.getCode());
-        assertEquals(product.getProductTypeName(), response.getProductTypeName());
-        assertEquals(product.getName(), response.getName());
-        assertEquals(product.getDescription(), response.getDescription());
-        assertEquals(product.getPurchasePriceInCents(), response.getPurchasePriceInCents());
-        assertEquals(product.getPreviousPurchasePriceInCents(), response.getPreviousPurchasePriceInCents());
-        assertEquals(product.getSalePriceInCents(), response.getPreviousSalePriceInCents());
-        assertEquals(product.getPreviousSalePriceInCents(), response.getPreviousSalePriceInCents());
-        assertEquals(product.getPriceUpdateDate(), response.getPriceUpdateDate());
-        assertEquals(product.getFullStock(), response.getFullStock());
+        assertEquals(product.getCode(), mapperResponse.getCode());
+        assertEquals(product.getProductTypeName(), mapperResponse.getProductTypeName());
+        assertEquals(product.getName(), mapperResponse.getName());
+        assertEquals(product.getDescription(), mapperResponse.getDescription());
+        assertEquals(product.getPurchasePriceInCents(), mapperResponse.getPurchasePriceInCents());
+        assertEquals(product.getPreviousPurchasePriceInCents(), mapperResponse.getPreviousPurchasePriceInCents());
+        assertEquals(product.getSalePriceInCents(), mapperResponse.getPreviousSalePriceInCents());
+        assertEquals(product.getPreviousSalePriceInCents(), mapperResponse.getPreviousSalePriceInCents());
+        assertEquals(product.getPriceUpdateDate(), mapperResponse.getPriceUpdateDate());
+        assertEquals(product.getFullStock(), mapperResponse.getFullStock());
     }
 }

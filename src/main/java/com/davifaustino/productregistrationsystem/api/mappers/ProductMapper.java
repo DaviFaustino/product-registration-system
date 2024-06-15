@@ -7,7 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.davifaustino.productregistrationsystem.api.dtos.ProductDto;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 
 @Component
@@ -16,15 +17,15 @@ public class ProductMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public Product toEntity(ProductDto dto) {
-        return modelMapper.map(dto, Product.class);
+    public Product toEntity(ProductRequest request) {
+        return modelMapper.map(request, Product.class);
     }
 
-    public ProductDto toDto(Product entity) {
-        return modelMapper.map(entity, ProductDto.class);
+    public ProductResponse toResponse(Product entity) {
+        return modelMapper.map(entity, ProductResponse.class);
     }
 
-    public List<ProductDto> toDtoList(List<Product> entityList) {
-        return entityList.stream().map(this::toDto).collect(Collectors.toList());
+    public List<ProductResponse> toResponseList(List<Product> entityList) {
+        return entityList.stream().map(this::toResponse).collect(Collectors.toList());
     }
 }
