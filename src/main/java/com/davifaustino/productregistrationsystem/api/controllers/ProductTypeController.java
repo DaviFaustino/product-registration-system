@@ -12,6 +12,7 @@ import com.davifaustino.productregistrationsystem.business.entities.ProductType;
 import com.davifaustino.productregistrationsystem.business.services.ProductTypeService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -61,10 +62,13 @@ public class ProductTypeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productTypeMapper.toResponse(serviceResponse));
     }
 
+
     @Operation(summary = "Get a list of product types")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Response successfully received"),
-        @ApiResponse(responseCode = "400", description = "Invalid request content")
+        @ApiResponse(responseCode = "200", description = "Response successfully received",
+                    content = {@Content(array = @ArraySchema(schema = @Schema(implementation =  ProductTypeResponse.class)))}),
+        @ApiResponse(responseCode = "400", description = "Invalid request content",
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
     @GetMapping
     public ResponseEntity<List<ProductTypeResponse>> getProductTypes(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) EnumCategory category) {
@@ -73,19 +77,24 @@ public class ProductTypeController {
         return ResponseEntity.status(HttpStatus.OK).body(productTypeMapper.toResponseList(serviceResponse));
     }
 
+
     @Operation(summary = "Get a list of product type names")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Response successfully received")
+        @ApiResponse(responseCode = "200", description = "Response successfully received",
+                    content = {@Content(array = @ArraySchema(schema = @Schema(implementation =  String.class)))})
     })
     @GetMapping("/names")
     public ResponseEntity<List<String>> getProductTypeNames() {
         return ResponseEntity.status(HttpStatus.OK).body(productTypeService.getProductTypeNames());
     }
 
+    
     @Operation(summary = "Update a product type")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "202", description = "Response successfully accepted"),
-        @ApiResponse(responseCode = "404", description = "Product type not found")
+        @ApiResponse(responseCode = "202", description = "Response successfully accepted",
+                    content = {@Content(schema = @Schema(implementation =  Integer.class))}),
+        @ApiResponse(responseCode = "404", description = "Product type not found",
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
     @PatchMapping("/{name}")
     public ResponseEntity<Integer> updateProductType(@PathVariable(value = "name") String name, @RequestBody ProductTypeRequest request) {

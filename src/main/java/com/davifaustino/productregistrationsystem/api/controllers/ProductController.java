@@ -22,6 +22,7 @@ import com.davifaustino.productregistrationsystem.business.services.ProductServi
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,10 +58,13 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toResponse(serviceResponse));
     }
 
+    
     @Operation(summary = "Get a list of products")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Response successfully received"),
-        @ApiResponse(responseCode = "400", description = "Invalid request content")
+        @ApiResponse(responseCode = "200", description = "Response successfully received",
+                    content = {@Content(array = @ArraySchema(schema = @Schema(implementation =  ProductResponse.class)))}),
+        @ApiResponse(responseCode = "400", description = "Invalid request content",
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
     @GetMapping
     public ResponseEntity<List<ProductResponse>> getProducts(@RequestParam(defaultValue = "") String searchTerm, @RequestParam(required = false) String productTypeName) {
