@@ -97,7 +97,7 @@ public class ProductTypeController {
         @ApiResponse(responseCode = "404", description = "Product type not found",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
-    @PatchMapping("/{name}")
+    @PatchMapping(value = "/{name}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> updateProductType(@PathVariable(value = "name") String name, @RequestBody ProductTypeRequest request) {
         Integer serviceResponse = productTypeService.updateProductType(name, productTypeMapper.toMap(request));
 
@@ -108,7 +108,7 @@ public class ProductTypeController {
     @Operation(summary = "Delete a product type")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Product successfully deleted",
-                    content = {@Content(schema = @Schema(implementation =  Integer.class))}),
+                    content = {@Content(schema = @Schema(implementation =  Void.class))}),
         @ApiResponse(responseCode = "404", description = "Product type not found",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
