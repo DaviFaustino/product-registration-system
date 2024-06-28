@@ -3,17 +3,20 @@ package com.davifaustino.productregistrationsystem.api.mappers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductUpdateRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.config.ModelMapperConfig;
+import com.davifaustino.productregistrationsystem.config.ObjectMapperConfig;
 
-@SpringBootTest(classes = {ProductMapper.class, ModelMapperConfig.class})
+@SpringBootTest(classes = {ProductMapper.class, ModelMapperConfig.class, ObjectMapperConfig.class})
 public class ProductMapperTest {
 
     @Autowired
@@ -51,5 +54,20 @@ public class ProductMapperTest {
         assertEquals(product.getPreviousSalePriceInCents(), mapperResponse.getPreviousSalePriceInCents());
         assertEquals(product.getPriceUpdateDate(), mapperResponse.getPriceUpdateDate());
         assertEquals(product.getFullStock(), mapperResponse.getFullStock());
+    }
+
+    @Test
+    void testToMap() {
+        ProductUpdateRequest productUpdateRequest = new ProductUpdateRequest(null, null, null, null, 2, 3, null);
+
+        Map<String, Object> response = productMapper.toMap(productUpdateRequest);
+        
+        assertEquals(response.get("code"), null);
+        assertEquals(response.get("productTypeName"), null);
+        assertEquals(response.get("name"), null);
+        assertEquals(response.get("description"), null);
+        assertEquals(response.get("purchasePriceInCents"), 2);
+        assertEquals(response.get("salePriceInCents"), 3);
+        assertEquals(response.get("fullStock"), null);
     }
 }
