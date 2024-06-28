@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductUpdateRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ErrorResponse;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductMapper;
@@ -28,6 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -71,5 +73,20 @@ public class ProductController {
         List<Product> serviceResponse = productService.getProducts(searchTerm, Optional.ofNullable(productTypeName));
 
         return ResponseEntity.status(HttpStatus.OK).body(productMapper.toResponseList(serviceResponse));
+    }
+
+
+    @Operation(summary = "Update a product")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "202", description = "Response successfully accepted",
+                    content = {@Content(schema = @Schema(implementation =  Integer.class))}),
+        @ApiResponse(responseCode = "404", description = "Product not found",
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
+    })
+    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> updateProduct(@RequestParam(required = true) String code, @RequestBody @Valid ProductUpdateRequest request) {
+        Integer serviceResponse = productService.updateProduct(code, productMapper.toMap(request));
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(serviceResponse);
     }
 }

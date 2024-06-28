@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,10 +25,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
+import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductUpdateRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductMapper;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
+import com.davifaustino.productregistrationsystem.business.exceptions.NonExistingRecordException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.services.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -50,6 +53,9 @@ public class ProductControllerTest {
     private ProductResponse productResponse;
     private String requestAsJson;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private ProductUpdateRequest productUpdateRequest;
+    private String updateRequestAsJson;
+    private Map<String, Object> productUpdates;
 
     @BeforeEach
     void setup() throws JsonProcessingException {
@@ -57,6 +63,9 @@ public class ProductControllerTest {
         productRequest = new ProductRequest("7902635410298", "Margarina", "Delícia", "b",  1, 1, true);
         productResponse = new ProductResponse("7902635410298", "Margarina", "Delícia", "b", 1, 1, 1, 1, new Timestamp(1715966809874l), true);
         requestAsJson = objectMapper.writeValueAsString(productRequest);
+        productUpdateRequest = new ProductUpdateRequest(null, null, null, null, 2, 3, null);
+        updateRequestAsJson = objectMapper.writeValueAsString(productUpdateRequest);
+        productUpdates = Map.of("purchasePriceInCents", 2, "salePriceInCents", 3);
     }
 
     @Test
@@ -167,5 +176,33 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.time", notNullValue()))
                 .andExpect(jsonPath("$.path", is("/products")))
                 .andExpect(jsonPath("$.method", is("GET")));
+    }
+
+    @Test
+    @DisplayName("Must update the product successfully")
+    void testUpdateProduct1() throws Exception {
+        when(productMapper.toMap(productUpdateRequest)).thenReturn(productUpdates);
+        when(productService.updateProduct(any(), any())).thenReturn(1);
+
+        mockMvc.perform(patch("/products")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("code", "          003")
+                        .content(updateRequestAsJson))
+                .andExpect(status().isAccepted());
+    }
+
+    @Test
+    @DisplayName("Must respond with an error message and status 404")
+    void testUpdateProduct2() throws Exception {
+        when(productMapper.toMap(productUpdateRequest)).thenReturn(productUpdates);
+        when(productService.updateProduct(any(), any())).thenThrow(NonExistingRecordException.class);
+
+        mockMvc.perform(patch("/products")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("code", "          003")
+                        .content(updateRequestAsJson))
+                .andExpect(status().isNotFound());
     }
 }
