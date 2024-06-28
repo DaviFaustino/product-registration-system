@@ -1,20 +1,26 @@
 package com.davifaustino.productregistrationsystem.business.services;
 
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
+import com.davifaustino.productregistrationsystem.business.exceptions.NonExistingRecordException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductRepository;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductService {
@@ -85,6 +91,15 @@ public class ProductService {
         return productRepository.findByNameIgnoreCaseContaining(searchTerm);
     }
 
+    @Transactional
+    public int updateProduct(String id, Map<String, Object> productUpdates) {
+
+        Product updatedProduct = composeUpdatedProduct(productUpdates, productRepository.findById(id).orElseThrow(() -> new NonExistingRecordException("Product not found")));
+        updatedProduct.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
+
+        return productRepository.updateByCode(id, updatedProduct);
+    }
+
     private String getNewCode() {
         List<Product> productNewCode = productRepository.findByCodeContaining("          ");
 
@@ -92,5 +107,36 @@ public class ProductService {
         int newCode = Integer.parseInt(lastCode.replace(" ", "")) + 1;
 
         return String.format("%03d", newCode);
+    }
+
+    @SuppressWarnings("null")
+    public Product composeUpdatedProduct(Map<String, Object> productUpdates, Product existingProduct) {
+        Product updatedProduct = new Product();
+
+        productUpdates.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(Product.class, key);
+            field.setAccessible(true);
+
+            if (value != null) {
+                ReflectionUtils.setField(field, updatedProduct, value);
+
+                if (field.getName().equals("purchasePriceInCents")) {
+                    Field previousValueField = ReflectionUtils.findField(Product.class, "previousPurchasePriceInCents");
+                    previousValueField.setAccessible(true);
+
+                    ReflectionUtils.setField(previousValueField, updatedProduct, ReflectionUtils.getField(field, existingProduct));
+                }
+                if (field.getName().equals("salePriceInCents")) {
+                    Field previousValueField = ReflectionUtils.findField(Product.class, "previousSalePriceInCents");
+                    previousValueField.setAccessible(true);
+
+                    ReflectionUtils.setField(previousValueField, updatedProduct, ReflectionUtils.getField(field, existingProduct));
+                }
+            } else {
+                ReflectionUtils.setField(field, updatedProduct, ReflectionUtils.getField(field, existingProduct));
+            }
+        });
+
+        return updatedProduct;
     }
 }

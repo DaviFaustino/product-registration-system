@@ -7,7 +7,9 @@ import static org.mockito.Mockito.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +23,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
+import com.davifaustino.productregistrationsystem.business.exceptions.NonExistingRecordException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductRepository;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
@@ -38,6 +41,7 @@ public class ProductServiceTest {
     ProductService productService;
 
     Product product;
+    Map<String, Object> productUpdates;
 
     @BeforeEach
     void setup() {
@@ -45,12 +49,21 @@ public class ProductServiceTest {
         product.setProductTypeName("");
         product.setName("");
         product.setDescription("");
-        product.setPurchasePriceInCents(1);
-        product.setPreviousPurchasePriceInCents(1);
-        product.setSalePriceInCents(1);
-        product.setPreviousSalePriceInCents(1);
+        product.setPurchasePriceInCents(100);
+        product.setSalePriceInCents(100);
+        product.setPreviousPurchasePriceInCents(null);
+        product.setPreviousSalePriceInCents(null);
         product.setPriceUpdateDate(new Timestamp(1));
         product.setFullStock(true);
+
+        productUpdates = new HashMap<>();
+        productUpdates.put("code", null);
+        productUpdates.put("productTypeName", null);
+        productUpdates.put("name", "Snack");
+        productUpdates.put("description", null);
+        productUpdates.put("purchasePriceInCents", 200);
+        productUpdates.put("salePriceInCents", 300);
+        productUpdates.put("fullStock", null);
     }
 
     @Test
@@ -181,5 +194,40 @@ public class ProductServiceTest {
         InvalidSearchException exception = assertThrows(InvalidSearchException.class, () -> productService.getProducts("   ", Optional.ofNullable(null)));
 
         assertTrue(exception.getMessage().equals("No search parameters provided"));
+    }
+
+    @Test
+    @DisplayName("Must update the product successfully")
+    void testUpdateProduct1() {
+        when(productRepository.findById(any())).thenReturn(Optional.of(product));
+
+        assertDoesNotThrow(() -> productService.updateProduct("", productUpdates));
+    }
+
+    @Test
+    @DisplayName("Must throw an exception when trying to update the product")
+    void testUpdateProduct2() {
+        when(productRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+
+        assertThrows(NonExistingRecordException.class, () -> productService.updateProduct("", productUpdates));
+    }
+
+    @Test
+    @DisplayName("Must return a product with the updates successfully")
+    void testComposeUpdatedProduct() {
+        product.setCode("          003");
+
+        Product updatedProduct = productService.composeUpdatedProduct(productUpdates, product);
+
+        assertEquals(updatedProduct.getCode(), "          003");
+        assertEquals(updatedProduct.getProductTypeName(), "");
+        assertEquals(updatedProduct.getName(), "Snack");
+        assertEquals(updatedProduct.getDescription(), "");
+        assertEquals(updatedProduct.getPurchasePriceInCents(), 200);
+        assertEquals(updatedProduct.getSalePriceInCents(), 300);
+        assertEquals(updatedProduct.getPreviousPurchasePriceInCents(), 100);
+        assertEquals(updatedProduct.getPreviousSalePriceInCents(), 100);
+        assertNotEquals(updatedProduct.getPriceUpdateDate(), new Timestamp(1));
+        assertEquals(updatedProduct.getFullStock(), true);
     }
 }
