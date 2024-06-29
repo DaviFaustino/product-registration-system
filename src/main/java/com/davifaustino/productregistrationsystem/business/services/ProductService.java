@@ -100,6 +100,15 @@ public class ProductService {
         return productRepository.updateByCode(id, updatedProduct);
     }
 
+    @Transactional
+    public void deleteProduct(String id) {
+        
+        if (!productRepository.existsById(id)) {
+            throw new NonExistingRecordException("Product not found");
+        }
+        productRepository.deleteById(id);
+    }
+
     private String getNewCode() {
         List<Product> productNewCode = productRepository.findByCodeContaining("          ");
 
