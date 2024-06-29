@@ -28,6 +28,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -88,5 +90,20 @@ public class ProductController {
         Integer serviceResponse = productService.updateProduct(code, productMapper.toMap(request));
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(serviceResponse);
+    }
+
+
+    @Operation(summary = "Delete a product")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Product successfully deleted",
+                    content = {@Content(schema = @Schema(implementation =  Void.class))}),
+        @ApiResponse(responseCode = "404", description = "Product not found",
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
+    })
+    @DeleteMapping
+    public ResponseEntity<Void> deleteProductType(@RequestParam(required = true) String code) {
+        productService.deleteProduct(code);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
