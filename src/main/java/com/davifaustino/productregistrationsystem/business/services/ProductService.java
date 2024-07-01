@@ -31,6 +31,10 @@ public class ProductService {
     @Autowired
     ProductTypeRepository productTypeRepository;
 
+    @Autowired
+    ProductTypeService productTypeService;
+
+
     public Product saveProduct(Product product) {
         if (product.getCode() == null) {
             product.setCode(getNewCode());
@@ -59,8 +63,11 @@ public class ProductService {
         }
 
         product.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
+        Product savedProduct = productRepository.save(product);
 
-        return productRepository.save(product);
+        productTypeService.updateAveragePriceInCents(savedProduct.getProductTypeName());
+        
+        return savedProduct;
     }
 
     public List<Product> getProducts(String searchTerm, Optional<String> opProductTypeName) {
@@ -97,7 +104,10 @@ public class ProductService {
         Product updatedProduct = composeUpdatedProduct(productUpdates, productRepository.findById(id).orElseThrow(() -> new NonExistingRecordException("Product not found")));
         updatedProduct.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
 
-        return productRepository.updateByCode(id, updatedProduct);
+        int modifiedLines = productRepository.updateByCode(id, updatedProduct);
+        productTypeService.updateAveragePriceInCents(updatedProduct.getProductTypeName());
+
+        return modifiedLines;
     }
 
     @Transactional
