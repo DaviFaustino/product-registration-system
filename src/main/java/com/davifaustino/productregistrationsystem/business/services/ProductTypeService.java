@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -13,6 +14,7 @@ import com.davifaustino.productregistrationsystem.business.entities.EnumCategory
 import com.davifaustino.productregistrationsystem.business.entities.ProductType;
 import com.davifaustino.productregistrationsystem.business.exceptions.NonExistingRecordException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
+import com.davifaustino.productregistrationsystem.business.repositories.ProductRepository;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
 
 import jakarta.transaction.Transactional;
@@ -22,6 +24,10 @@ public class ProductTypeService {
     
     @Autowired
     ProductTypeRepository productTypeRepository;
+
+    @Autowired
+    ProductRepository productRepository;
+
 
     public ProductType saveProductType(ProductType productType) {
         if (productTypeRepository.existsById(productType.getName())) {
@@ -62,6 +68,17 @@ public class ProductTypeService {
         });
         
         return productTypeRepository.updateByName(id, updatedProductType);
+    }
+
+    @Async
+    public void updateAveragePriceInCents(String productTypeName) {
+
+        List<Integer> prices = productRepository.findPricesByProductTypeName(productTypeName);
+        Integer averagePrice = prices.stream().mapToInt(Integer::intValue).sum() / prices.size();
+
+        ProductType existingProductType = productTypeRepository.findById(productTypeName).orElse(null);
+        existingProductType.setAveragePriceInCents(averagePrice);
+        productTypeRepository.save(existingProductType);
     }
 
     @Transactional
