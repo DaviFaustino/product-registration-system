@@ -3,6 +3,8 @@ package com.davifaustino.productregistrationsystem.business.repositories;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,5 +32,13 @@ public class ProductRepositoryTest {
         assertEquals(productUpdates.getPurchasePriceInCents(), updatedProduct.getPurchasePriceInCents());
         assertEquals(productUpdates.getSalePriceInCents(), updatedProduct.getSalePriceInCents());
         assertEquals(productUpdates.getPriceUpdateDate(), updatedProduct.getPriceUpdateDate());
+    }
+
+    @Test
+    @DisplayName("Must find a product price list successfully")
+    void testFindPricesByProductType() {
+        List<Integer> serviceReturn = productRepository.findPricesByProductTypeName("Biscoito");
+
+        assertEquals(serviceReturn, Arrays.asList(1, 3, 2, 4));
     }
 }

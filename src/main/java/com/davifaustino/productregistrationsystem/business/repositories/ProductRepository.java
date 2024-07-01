@@ -25,6 +25,10 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     List<Product> findByNameIgnoreCaseContainingAndProductTypeName(String name, String productTypeName);
 
+    @Query(value = "SELECT sale_price_in_cents FROM tb_products " +
+                    "WHERE product_type_name = :productTypeName", nativeQuery = true)
+    List<Integer> findPricesByProductTypeName(@Param("productTypeName") String productTypeName);
+
     boolean existsByName(String name);
 
     @Modifying
