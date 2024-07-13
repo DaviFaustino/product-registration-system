@@ -33,7 +33,8 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE tb_products SET product_type_name = :#{#productUpdates.productTypeName}, " +
+    @Query(value = "UPDATE tb_products SET code = :#{#productUpdates.code}," +
+                    "product_type_name = :#{#productUpdates.productTypeName}, " +
                     "name = :#{#productUpdates.name}, " +
                     "description = :#{#productUpdates.description}, " +
                     "purchase_price_in_cents = :#{#productUpdates.purchasePriceInCents}, " +

@@ -130,7 +130,11 @@ public class ProductService {
 
     @SuppressWarnings("null")
     public Product composeUpdatedProduct(Map<String, Object> productUpdates, Product existingProduct) {
-        Product updatedProduct = new Product();
+        Product updatedProduct = new Product(existingProduct.getCode(), existingProduct.getProductTypeName(),
+                                            existingProduct.getName(), existingProduct.getDescription(),
+                                            existingProduct.getPurchasePriceInCents(), existingProduct.getPreviousPurchasePriceInCents(),
+                                            existingProduct.getSalePriceInCents(), existingProduct.getPreviousSalePriceInCents(),
+                                            existingProduct.getPriceUpdateDate(), existingProduct.getFullStock());
 
         productUpdates.forEach((key, value) -> {
             Field field = ReflectionUtils.findField(Product.class, key);
@@ -151,10 +155,12 @@ public class ProductService {
 
                     ReflectionUtils.setField(previousValueField, updatedProduct, ReflectionUtils.getField(field, existingProduct));
                 }
-            } else {
-                ReflectionUtils.setField(field, updatedProduct, ReflectionUtils.getField(field, existingProduct));
             }
         });
+
+        if (productUpdates.get("salePriceInCents") != null) {
+            updatedProduct.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
+        }
 
         return updatedProduct;
     }
