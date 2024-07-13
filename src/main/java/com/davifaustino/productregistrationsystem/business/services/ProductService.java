@@ -140,7 +140,7 @@ public class ProductService {
             Field field = ReflectionUtils.findField(Product.class, key);
             field.setAccessible(true);
 
-            if (value != null) {
+            if (value != null && !value.equals(ReflectionUtils.getField(field, existingProduct))) {
                 ReflectionUtils.setField(field, updatedProduct, value);
 
                 if (field.getName().equals("purchasePriceInCents")) {
