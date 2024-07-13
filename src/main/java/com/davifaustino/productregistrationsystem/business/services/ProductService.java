@@ -101,8 +101,13 @@ public class ProductService {
     @Transactional
     public int updateProduct(String id, Map<String, Object> productUpdates) {
 
-        Product updatedProduct = composeUpdatedProduct(productUpdates, productRepository.findById(id).orElseThrow(() -> new NonExistingRecordException("Product not found")));
-        updatedProduct.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
+        List<Product> existingProduct = getProducts(id, Optional.ofNullable(null));
+        Product updatedProduct;
+        if (existingProduct.size() != 0) {
+            updatedProduct = composeUpdatedProduct(productUpdates, existingProduct.get(0));
+        } else {
+            throw new NonExistingRecordException("Product not found");
+        }
 
         int modifiedLines = productRepository.updateByCode(id, updatedProduct);
         productTypeService.updateAveragePriceInCents(updatedProduct.getProductTypeName());
