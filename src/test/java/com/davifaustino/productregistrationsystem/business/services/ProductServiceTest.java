@@ -202,17 +202,17 @@ public class ProductServiceTest {
     @Test
     @DisplayName("Must update the product successfully")
     void testUpdateProduct1() {
-        when(productRepository.findById(any())).thenReturn(Optional.of(product));
+        when(productRepository.findByCode(any())).thenReturn(Optional.of(product));
 
-        assertDoesNotThrow(() -> productService.updateProduct("", productUpdates));
+        assertDoesNotThrow(() -> productService.updateProduct("004", productUpdates));
     }
 
     @Test
     @DisplayName("Must throw an exception when trying to update the product")
     void testUpdateProduct2() {
-        when(productRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+        when(productRepository.findByCode(any())).thenReturn(Optional.ofNullable(null));
 
-        assertThrows(NonExistingRecordException.class, () -> productService.updateProduct("", productUpdates));
+        assertThrows(NonExistingRecordException.class, () -> productService.updateProduct("004", productUpdates));
     }
 
     @Test
