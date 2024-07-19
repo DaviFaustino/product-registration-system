@@ -37,8 +37,8 @@ public class ProductRepositoryTest {
     @Test
     @DisplayName("Must find a product price list successfully")
     void testFindPricesByProductType() {
-        List<Integer> serviceReturn = productRepository.findPricesByProductTypeName("Biscoito");
+        List<Integer> repositoryReturn = productRepository.findPricesByProductTypeName("Biscoito");
 
-        assertEquals(serviceReturn, Arrays.asList(1, 3, 2, 4));
+        assertEquals(repositoryReturn, Arrays.asList(1, 3, 2, 4));
     }
 }
