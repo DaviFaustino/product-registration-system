@@ -78,7 +78,7 @@ public class ProductServiceTest {
         when(productRepository.save(any(Product.class))).thenReturn(product);
         when(productTypeRepository.existsById(any())).thenReturn(true);
 
-        Product productReturn = productService.saveProduct(product);
+        Product productReturn = productService.saveProduct(product, false);
 
         assertTrue(productReturn.equals(product));
         verify(productRepository, times(0)).findByCodeContaining(any());
@@ -96,7 +96,7 @@ public class ProductServiceTest {
         when(productRepository.findByCodeContaining(any())).thenReturn(productList);
         when(productTypeRepository.existsById(any())).thenReturn(true);
 
-        Product productReturn = productService.saveProduct(product);
+        Product productReturn = productService.saveProduct(product, false);
 
         assertTrue(productReturn.equals(product));
         assertTrue(productReturn.getCode().equals("          004"));
@@ -111,7 +111,7 @@ public class ProductServiceTest {
 
         when(productRepository.existsById(any())).thenReturn(true);
 
-        assertThrows(RecordConflictException.class, () -> productService.saveProduct(product));
+        assertThrows(RecordConflictException.class, () -> productService.saveProduct(product, false));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class ProductServiceTest {
         when(productRepository.existsById(any())).thenReturn(false);
         when(productTypeRepository.existsById(any())).thenReturn(false);
 
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product));
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product, false));
         assertTrue(exception.getMessage().equals("The product type entered doesn't exist in the database"));
     }
 
@@ -135,7 +135,7 @@ public class ProductServiceTest {
         when(productTypeRepository.existsById(any())).thenReturn(true);
         when(productRepository.existsByName(any())).thenReturn(true);
 
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product));
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product, false));
         assertTrue(exception.getMessage().equals("The product name entered already exists in the database"));
     }
 

@@ -36,7 +36,7 @@ public class ProductService {
     ProductTypeService productTypeService;
 
 
-    public Product saveProduct(Product product) {
+    public Product saveProduct(Product product, boolean isPriceOld) {
         if (product.getCode() == null) {
             product.setCode(getNewCode());
         }
@@ -63,7 +63,11 @@ public class ProductService {
             throw new DataIntegrityViolationException(errorMessage);
         }
 
-        product.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
+        if (isPriceOld) {
+            product.setPriceUpdateDate(new Timestamp(0));
+        } else {
+            product.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
+        }
         Product savedProduct = productRepository.save(product);
 
         productTypeService.updateAveragePriceInCents(savedProduct.getProductTypeName());
