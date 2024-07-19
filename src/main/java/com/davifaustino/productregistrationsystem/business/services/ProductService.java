@@ -103,6 +103,10 @@ public class ProductService {
         return productRepository.findByNameIgnoreCaseContaining(searchTerm);
     }
 
+    public List<Product> getProductsWithRecentPriceUpdate(Long dateAfterLong) {
+        return productRepository.findByPriceUpdateDateAfter(new Timestamp(dateAfterLong));
+    }
+
     @Transactional
     public int updateProduct(String id, Map<String, Object> productUpdates) {
 

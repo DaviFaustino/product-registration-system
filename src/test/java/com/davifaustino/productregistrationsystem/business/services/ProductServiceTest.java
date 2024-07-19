@@ -208,6 +208,17 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Must get a product list with recent price update")
+    void testGetProductsWithRecentPriceUpdate() {
+        when(productRepository.findByPriceUpdateDateAfter(any())).thenReturn(Arrays.asList(product));
+
+        List<Product> listReturn = productService.getProductsWithRecentPriceUpdate(1l);
+
+        assertNotNull(listReturn);
+        verify(productRepository, times(1)).findByPriceUpdateDateAfter(any());
+    }
+
+    @Test
     @DisplayName("Must throw an exception when trying to update the product")
     void testUpdateProduct2() {
         when(productRepository.findByCode(any())).thenReturn(Optional.ofNullable(null));
