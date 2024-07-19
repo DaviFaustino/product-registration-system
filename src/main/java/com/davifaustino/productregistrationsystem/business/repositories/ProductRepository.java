@@ -1,5 +1,6 @@
 package com.davifaustino.productregistrationsystem.business.repositories;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +29,8 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     @Query(value = "SELECT sale_price_in_cents FROM tb_products " +
                     "WHERE product_type_name = :productTypeName", nativeQuery = true)
     List<Integer> findPricesByProductTypeName(@Param("productTypeName") String productTypeName);
+
+    List<Product> findByPriceUpdateDateAfter(Timestamp priceUpdateDate);
 
     boolean existsByName(String name);
 
