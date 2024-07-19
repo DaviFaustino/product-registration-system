@@ -72,7 +72,7 @@ public class ProductControllerTest {
     @DisplayName("Must create and return a Product successfully")
     void testSaveProductCase1() throws Exception {
         when(productMapper.toEntity(any())).thenReturn(product);
-        when(productService.saveProduct(any())).thenReturn(product);
+        when(productService.saveProduct(any(), any(Boolean.class))).thenReturn(product);
         when(productMapper.toResponse(any())).thenReturn(productResponse);
 
         mockMvc.perform(post("/products")
@@ -88,7 +88,7 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.salePriceInCents", is(product.getSalePriceInCents())))
                 .andExpect(jsonPath("$.fullStock", is(product.getFullStock())));
         
-        verify(productService).saveProduct(any());
+        verify(productService).saveProduct(any(), any(Boolean.class));
         verifyNoMoreInteractions(productService);
     }
 
@@ -96,7 +96,7 @@ public class ProductControllerTest {
     @DisplayName("Must throw a RecordConflictException")
     void testSaveProductCase2() throws Exception {
         when(productMapper.toEntity(any())).thenReturn(product);
-        when(productService.saveProduct(any())).thenThrow(new RecordConflictException("The Product already exists in the database"));
+        when(productService.saveProduct(any(), any(Boolean.class))).thenThrow(new RecordConflictException("The Product already exists in the database"));
 
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -130,7 +130,7 @@ public class ProductControllerTest {
     @DisplayName("Must throw a DataIntegrityViolationException")
     void testSaveProductCase4() throws Exception {
         when(productMapper.toEntity(any())).thenReturn(product);
-        when(productService.saveProduct(any())).thenThrow(new DataIntegrityViolationException(""));
+        when(productService.saveProduct(any(), any(Boolean.class))).thenThrow(new DataIntegrityViolationException(""));
 
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)

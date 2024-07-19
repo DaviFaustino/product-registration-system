@@ -56,8 +56,8 @@ public class ProductController {
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductResponse> saveProduct (@RequestBody @Valid ProductRequest request) {
-        Product serviceResponse = productService.saveProduct(productMapper.toEntity(request));
+    public ResponseEntity<ProductResponse> saveProduct (@RequestParam(defaultValue = "false") boolean isPriceOld, @RequestBody @Valid ProductRequest request) {
+        Product serviceResponse = productService.saveProduct(productMapper.toEntity(request), isPriceOld);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(productMapper.toResponse(serviceResponse));
     }
