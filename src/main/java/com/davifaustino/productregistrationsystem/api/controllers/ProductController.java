@@ -7,32 +7,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductUpdateRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ErrorResponse;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductWithRecentPriceResponse;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductMapper;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.services.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -75,6 +75,21 @@ public class ProductController {
         List<Product> serviceResponse = productService.getProducts(searchTerm, Optional.ofNullable(productTypeName));
 
         return ResponseEntity.status(HttpStatus.OK).body(productMapper.toResponseList(serviceResponse));
+    }
+
+    
+    @Operation(summary = "Get a list of products with recent price update")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Response successfully received",
+                    content = {@Content(array = @ArraySchema(schema = @Schema(implementation =  ProductWithRecentPriceResponse.class)))}),
+        @ApiResponse(responseCode = "400", description = "Invalid request parameter",
+                    content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
+    })
+    @GetMapping(value = "/recent-price-updates")
+    public ResponseEntity<List<ProductWithRecentPriceResponse>> getProductsWithRecentPriceUpdate(@RequestParam Long initialTime) {
+        List<Product> serviceResponse = productService.getProductsWithRecentPriceUpdate(initialTime);
+
+        return ResponseEntity.status(HttpStatus.OK).body(productMapper.toRecentPriceList(serviceResponse));
     }
 
 

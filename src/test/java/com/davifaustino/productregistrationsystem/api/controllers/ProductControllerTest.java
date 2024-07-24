@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductUpdateRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductWithRecentPriceResponse;
 import com.davifaustino.productregistrationsystem.api.mappers.ProductMapper;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
@@ -54,6 +55,7 @@ public class ProductControllerTest {
     private String requestAsJson;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private ProductUpdateRequest productUpdateRequest;
+    private ProductWithRecentPriceResponse recentPriceResponse;
     private String updateRequestAsJson;
     private Map<String, Object> productUpdates;
 
@@ -64,6 +66,7 @@ public class ProductControllerTest {
         productResponse = new ProductResponse("7902635410298", "Margarina", "Delícia", "b", 1, 1, 1, 1, new Timestamp(1715966809874l), true);
         requestAsJson = objectMapper.writeValueAsString(productRequest);
         productUpdateRequest = new ProductUpdateRequest(null, null, null, null, 2, 3, null);
+        recentPriceResponse = new ProductWithRecentPriceResponse("Delícia", 1, 1);
         updateRequestAsJson = objectMapper.writeValueAsString(productUpdateRequest);
         productUpdates = Map.of("purchasePriceInCents", 2, "salePriceInCents", 3);
     }
@@ -176,6 +179,33 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.time", notNullValue()))
                 .andExpect(jsonPath("$.path", is("/products")))
                 .andExpect(jsonPath("$.method", is("GET")));
+    }
+
+    @Test
+    @DisplayName("Must respond with a recent price list successfully")
+    void testGetProductsWithRecentPriceUpdate1() throws Exception {
+        List<Product> productList = new ArrayList<>();
+        List<ProductWithRecentPriceResponse> recentPriceList = new ArrayList<>();
+        productList.add(product);
+        recentPriceList.add(recentPriceResponse);
+
+        when(productService.getProductsWithRecentPriceUpdate(1715000000000l)).thenReturn(productList);
+        when(productMapper.toRecentPriceList(productList)).thenReturn(recentPriceList);
+
+        mockMvc.perform(get("/products/recent-price-updates")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("initialTime", "1715000000000"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Must respond with an error message and status code 400")
+    void testGetProductsWithRecentPriceUpdate2() throws Exception {
+
+        mockMvc.perform(get("/products/recent-price-updates")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .param("initialTime", "false"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
