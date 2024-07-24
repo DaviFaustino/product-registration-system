@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductUpdateRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductWithRecentPriceResponse;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +36,12 @@ public class ProductMapper {
     public List<ProductResponse> toResponseList(List<Product> entityList) {
         return entityList.stream().map(this::toResponse).collect(Collectors.toList());
     }
+
+    public List<ProductWithRecentPriceResponse> toRecentPriceList(List<Product> entityList) {
+        return entityList.stream()
+                        .map(entity -> modelMapper.map(entity, ProductWithRecentPriceResponse.class))
+                        .collect(Collectors.toList());
+    } 
 
     public Map<String, Object> toMap(ProductUpdateRequest request) {
         return objectMapper.convertValue(request, new TypeReference<Map<String, Object>>() {});

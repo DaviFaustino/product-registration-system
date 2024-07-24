@@ -3,6 +3,8 @@ package com.davifaustino.productregistrationsystem.api.mappers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductUpdateRequest;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
+import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductWithRecentPriceResponse;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.config.ModelMapperConfig;
 import com.davifaustino.productregistrationsystem.config.ObjectMapperConfig;
@@ -54,6 +57,17 @@ public class ProductMapperTest {
         assertEquals(product.getPreviousSalePriceInCents(), mapperResponse.getPreviousSalePriceInCents());
         assertEquals(product.getPriceUpdateDate(), mapperResponse.getPriceUpdateDate());
         assertEquals(product.getFullStock(), mapperResponse.getFullStock());
+    }
+
+    @Test
+    void testToRecentPriceList() {
+        Product product = new Product(null, null, "Arroz", null, null, null, 10, 20, null, null);
+
+        List<ProductWithRecentPriceResponse> response = productMapper.toRecentPriceList(Arrays.asList(product));
+
+        assertEquals("Arroz", response.get(0).getName());
+        assertEquals(10, response.get(0).getSalePriceInCents());
+        assertEquals(20, response.get(0).getPreviousSalePriceInCents());
     }
 
     @Test
