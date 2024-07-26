@@ -17,6 +17,7 @@ import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
 import com.davifaustino.productregistrationsystem.business.exceptions.NonExistingRecordException;
 import com.davifaustino.productregistrationsystem.business.exceptions.RecordConflictException;
+import com.davifaustino.productregistrationsystem.business.exceptions.UpdatesNotProvidedException;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductRepository;
 import com.davifaustino.productregistrationsystem.business.repositories.ProductTypeRepository;
 
@@ -101,6 +102,15 @@ public class ProductService {
     @Transactional
     public int updateProduct(String id, Map<String, Object> productUpdates) {
 
+        for (String key : productUpdates.keySet()) {
+            if (productUpdates.get(key) != null) {
+                break;
+            }
+            if (key.equals("fullStock")) {
+                throw new UpdatesNotProvidedException("No update data provided");
+            }
+        }
+
         List<Product> existingProduct = getProducts(id, Optional.ofNullable(null));
         Product updatedProduct;
         if (existingProduct.size() != 0) {
@@ -109,7 +119,7 @@ public class ProductService {
             throw new NonExistingRecordException("Product not found");
         }
 
-        int modifiedLines = productRepository.updateByCode(id, updatedProduct);
+        int modifiedLines = productRepository.updateByCode(String.format("%13s", id), updatedProduct);
         productTypeService.updateAveragePriceInCents(updatedProduct.getProductTypeName());
 
         return modifiedLines;

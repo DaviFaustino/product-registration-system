@@ -43,6 +43,6 @@ public interface ProductRepository extends JpaRepository<Product, String> {
                     "previous_sale_price_in_cents = :#{#productUpdates.previousSalePriceInCents}, " +
                     "price_update_date = :#{#productUpdates.priceUpdateDate}, " +
                     "full_stock = :#{#productUpdates.fullStock} " +
-                    "WHERE code = :searchTerm", nativeQuery = true)
-    int updateByCode(@Param("searchTerm") String code, @Param("productUpdates") Product productUpdates);
+                    "WHERE code = :code", nativeQuery = true)
+    int updateByCode(@Param("code") String code, @Param("productUpdates") Product productUpdates);
 }
