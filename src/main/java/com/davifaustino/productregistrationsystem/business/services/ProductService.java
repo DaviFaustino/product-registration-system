@@ -177,6 +177,8 @@ public class ProductService {
             updatedProduct.setPriceUpdateDate(new Timestamp(System.currentTimeMillis()));
         }
 
+        updatedProduct.setCode(String.format("%13s", updatedProduct.getCode()));
+
         return updatedProduct;
     }
 }
