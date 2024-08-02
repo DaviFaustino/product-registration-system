@@ -42,26 +42,7 @@ public class ProductService {
         }
 
         product.setCode(String.format("%13s", product.getCode()));
-
-        if (productRepository.existsById(product.getCode())) {
-
-            throw new RecordConflictException("The Product already exists in the database");
-        }
-
-        String errorMessage = "";
-
-        if (!productTypeRepository.existsById(product.getProductTypeName())) {
-
-            errorMessage = "The product type entered doesn't exist in the database";
-        }
-        if (productRepository.existsByName(product.getName())) {
-
-            errorMessage = "The product name entered already exists in the database";
-        }
-        if (!errorMessage.equals("")) {
-
-            throw new DataIntegrityViolationException(errorMessage);
-        }
+        validate(product);
 
         if (isPriceOld) {
             product.setPriceUpdateDate(new Timestamp(0));
@@ -149,6 +130,25 @@ public class ProductService {
         int newCode = Integer.parseInt(lastCode.replace(" ", "")) + 1;
 
         return String.format("%03d", newCode);
+    }
+
+    private void validate(Product product) {
+
+        if (productRepository.existsById(product.getCode())) {
+            throw new RecordConflictException("The Product already exists in the database");
+        }
+
+        String errorMessage = "";
+
+        if (!productTypeRepository.existsById(product.getProductTypeName())) {
+            errorMessage = "The product type entered doesn't exist in the database";
+        }
+        if (productRepository.existsByName(product.getName())) {
+            errorMessage = "The product name entered already exists in the database";
+        }
+        if (!errorMessage.equals("")) {
+            throw new DataIntegrityViolationException(errorMessage);
+        }
     }
 
     @SuppressWarnings("null")
