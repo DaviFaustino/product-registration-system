@@ -39,6 +39,6 @@ public class ProductRepositoryTest {
     void testFindPricesByProductType() {
         List<Integer> repositoryReturn = productRepository.findPricesByProductTypeName("Biscoito");
 
-        assertEquals(repositoryReturn, Arrays.asList(1, 3, 2, 4));
+        assertEquals(repositoryReturn, Arrays.asList(200, 150, 150, 200));
     }
 }
