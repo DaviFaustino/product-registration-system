@@ -23,10 +23,10 @@ import jakarta.transaction.Transactional;
 public class ProductTypeService {
     
     @Autowired
-    ProductTypeRepository productTypeRepository;
+    private ProductTypeRepository productTypeRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
 
     public ProductType saveProductType(ProductType productType) {

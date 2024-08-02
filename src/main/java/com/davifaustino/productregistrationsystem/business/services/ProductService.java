@@ -27,13 +27,13 @@ import jakarta.transaction.Transactional;
 public class ProductService {
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    ProductTypeRepository productTypeRepository;
+    private ProductTypeRepository productTypeRepository;
 
     @Autowired
-    ProductTypeService productTypeService;
+    private ProductTypeService productTypeService;
 
 
     public Product saveProduct(Product product, boolean isPriceOld) {
