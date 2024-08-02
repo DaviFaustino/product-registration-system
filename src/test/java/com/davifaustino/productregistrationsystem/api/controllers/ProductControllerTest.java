@@ -20,7 +20,6 @@ import org.mockito.internal.verification.VerificationModeFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -130,15 +129,15 @@ public class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("Must throw a DataIntegrityViolationException")
+    @DisplayName("Must throw a NonExistingRecordException")
     void testSaveProductCase4() throws Exception {
         when(productMapper.toEntity(any())).thenReturn(product);
-        when(productService.saveProduct(any(), any(Boolean.class))).thenThrow(new DataIntegrityViolationException(""));
+        when(productService.saveProduct(any(), any(Boolean.class))).thenThrow(new NonExistingRecordException(""));
 
         mockMvc.perform(post("/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestAsJson))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is("")))
                 .andExpect(jsonPath("$.time", notNullValue()))
                 .andExpect(jsonPath("$.path", is("/products")))

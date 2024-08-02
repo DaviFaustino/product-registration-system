@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -137,17 +136,11 @@ public class ProductService {
         if (productRepository.existsById(product.getCode())) {
             throw new RecordConflictException("The Product already exists in the database");
         }
-
-        String errorMessage = "";
-
         if (!productTypeRepository.existsById(product.getProductTypeName())) {
-            errorMessage = "The product type entered doesn't exist in the database";
+            throw new NonExistingRecordException("The product type entered doesn't exist in the database");
         }
         if (productRepository.existsByName(product.getName())) {
-            errorMessage = "The product name entered already exists in the database";
-        }
-        if (!errorMessage.equals("")) {
-            throw new DataIntegrityViolationException(errorMessage);
+            throw new RecordConflictException("The product name entered already exists in the database");
         }
     }
 

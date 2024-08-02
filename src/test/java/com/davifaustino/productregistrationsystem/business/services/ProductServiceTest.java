@@ -19,7 +19,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataIntegrityViolationException;
 
 import com.davifaustino.productregistrationsystem.business.entities.Product;
 import com.davifaustino.productregistrationsystem.business.exceptions.InvalidSearchException;
@@ -115,19 +114,19 @@ public class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("Must throw an DataIntegrityViolationException when trying to save a product to the database because the product type doesn't exist")
+    @DisplayName("Must throw an NonExistingRecordException when trying to save a product to the database because the product type doesn't exist")
     void testSaveProduct4() {
         product.setCode("1111111111111");
 
         when(productRepository.existsById(any())).thenReturn(false);
         when(productTypeRepository.existsById(any())).thenReturn(false);
 
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product, false));
+        NonExistingRecordException exception = assertThrows(NonExistingRecordException.class, () -> productService.saveProduct(product, false));
         assertTrue(exception.getMessage().equals("The product type entered doesn't exist in the database"));
     }
 
     @Test
-    @DisplayName("Must throw an DataIntegrityViolationException when trying to save a product to the database because the name isn't unique")
+    @DisplayName("Must throw an RecordConflictException when trying to save a product to the database because the name isn't unique")
     void testSaveProduct5() {
         product.setCode("1111111111118");
 
@@ -135,7 +134,7 @@ public class ProductServiceTest {
         when(productTypeRepository.existsById(any())).thenReturn(true);
         when(productRepository.existsByName(any())).thenReturn(true);
 
-        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, () -> productService.saveProduct(product, false));
+        RecordConflictException exception = assertThrows(RecordConflictException.class, () -> productService.saveProduct(product, false));
         assertTrue(exception.getMessage().equals("The product name entered already exists in the database"));
     }
 
