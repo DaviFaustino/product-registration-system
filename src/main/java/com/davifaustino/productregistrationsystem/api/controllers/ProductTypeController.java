@@ -66,9 +66,9 @@ public class ProductTypeController {
 
     @Operation(summary = "Get a list of product types")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Response successfully received",
+        @ApiResponse(responseCode = "200", description = "List of product types successfully received",
                     content = {@Content(array = @ArraySchema(schema = @Schema(implementation =  ProductTypeResponse.class)))}),
-        @ApiResponse(responseCode = "400", description = "Invalid request content",
+        @ApiResponse(responseCode = "400", description = "Invalid request parameter",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
     @GetMapping
@@ -81,7 +81,7 @@ public class ProductTypeController {
 
     @Operation(summary = "Get a list of product type names")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Response successfully received",
+        @ApiResponse(responseCode = "200", description = "List of product type names successfully received",
                     content = {@Content(array = @ArraySchema(schema = @Schema(implementation =  String.class)))})
     })
     @GetMapping("/names")
@@ -92,7 +92,7 @@ public class ProductTypeController {
     
     @Operation(summary = "Update a product type")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "202", description = "Response successfully accepted",
+        @ApiResponse(responseCode = "202", description = "Product type update successfully accepted",
                     content = {@Content(schema = @Schema(implementation =  Integer.class))}),
         @ApiResponse(responseCode = "404", description = "Product type not found",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
@@ -107,7 +107,7 @@ public class ProductTypeController {
 
     @Operation(summary = "Delete a product type")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Product successfully deleted",
+        @ApiResponse(responseCode = "204", description = "Product type successfully deleted",
                     content = {@Content(schema = @Schema(implementation =  Void.class))}),
         @ApiResponse(responseCode = "404", description = "Product type not found",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})

@@ -65,7 +65,7 @@ public class ProductController {
     
     @Operation(summary = "Get a list of products")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Response successfully received",
+        @ApiResponse(responseCode = "200", description = "Products received successfully",
                     content = {@Content(array = @ArraySchema(schema = @Schema(implementation =  ProductResponse.class)))}),
         @ApiResponse(responseCode = "400", description = "Invalid request content",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
@@ -80,7 +80,7 @@ public class ProductController {
     
     @Operation(summary = "Get a list of products with recent price update")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Response successfully received",
+        @ApiResponse(responseCode = "200", description = "Recent prices successfully received",
                     content = {@Content(array = @ArraySchema(schema = @Schema(implementation =  ProductWithRecentPriceResponse.class)))}),
         @ApiResponse(responseCode = "400", description = "Invalid request parameter",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
@@ -95,7 +95,7 @@ public class ProductController {
 
     @Operation(summary = "Update a product")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "202", description = "Response successfully accepted",
+        @ApiResponse(responseCode = "202", description = "Product successfully updated",
                     content = {@Content(schema = @Schema(implementation =  Integer.class))}),
         @ApiResponse(responseCode = "400", description = "No update data provided",
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))}),
