@@ -20,7 +20,7 @@ public class ProductRequest {
     String code;
 
     @NotNull
-    @Size(max = 32)
+    @Size(min = 3, max = 32)
     String productTypeName;
 
     @NotNull

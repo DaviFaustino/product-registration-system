@@ -18,7 +18,7 @@ public class ProductUpdateRequest {
     @ProductCode
     String code;
 
-    @Size(max = 32)
+    @Size(min = 3, max = 32)
     String productTypeName;
 
     @Size(min = 3, max = 42)
