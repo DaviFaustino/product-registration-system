@@ -29,14 +29,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), new Timestamp(System.currentTimeMillis()), request.getRequestURI(), request.getMethod());
+        ErrorResponse errorResponse = new ErrorResponse("Method Argument Not Valid", new Timestamp(System.currentTimeMillis()), request.getRequestURI(), request.getMethod());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpServletRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), new Timestamp(System.currentTimeMillis()), request.getRequestURI(), request.getMethod());
+        ErrorResponse errorResponse = new ErrorResponse("Method Argument Type Mismatch", new Timestamp(System.currentTimeMillis()), request.getRequestURI(), request.getMethod());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
