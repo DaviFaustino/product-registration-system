@@ -1,11 +1,11 @@
 package com.davifaustino.productregistrationsystem.business.entities;
 
 public enum EnumCategory {
-    PANIFICAÇÃO,
-    BOBONS_E_SALGADINHOS,
-    BEBIDAS_E_LATICÍNIOS,
-    ALIMENTOS_REVENDA,
-    LIMPEZA_E_HIGIENE,
-    MATÉRIA_PRIMA,
-    OUTROS
+    BAKING,
+    CANDIES_AND_SNACKS,
+    BEVERAGES_AND_DAIRY_PRODUCTS,
+    FOOD_STAPLES_FOR_RESALE,
+    CLEANING_AND_HYGIENE,
+    RAW_MATERIALS,
+    OTHERS
 }

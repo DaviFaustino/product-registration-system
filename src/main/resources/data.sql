@@ -1,14 +1,14 @@
 INSERT INTO tb_product_types
-VALUES ('Margarina', 'ALIMENTOS_REVENDA', 500, 2),
-('Óleo', 'ALIMENTOS_REVENDA', 800, 1),
-('Pão doce', 'PANIFICAÇÃO', 75, 1),
-('Pipoca', 'BOBONS_E_SALGADINHOS', 500, 3),
-('Reforçador', 'MATÉRIA_PRIMA', 500, 3),
-('Danone', 'BEBIDAS_E_LATICÍNIOS', 500, 3),
-('Biscoito', 'PANIFICAÇÃO', 500, 3),
-('Refri de 1L', 'BEBIDAS_E_LATICÍNIOS', 500, 3),
-('Vassoura', 'OUTROS', 500, 3),
-('Papel higiênico', 'LIMPEZA_E_HIGIENE', 500, 2);
+VALUES ('Margarina', 'FOOD_STAPLES_FOR_RESALE', 500, 2),
+('Óleo', 'FOOD_STAPLES_FOR_RESALE', 800, 1),
+('Pão doce', 'BAKING', 75, 1),
+('Pipoca', 'CANDIES_AND_SNACKS', 500, 3),
+('Reforçador', 'RAW_MATERIALS', 500, 3),
+('Danone', 'BEVERAGES_AND_DAIRY_PRODUCTS', 500, 3),
+('Biscoito', 'BAKING', 500, 3),
+('Refri de 1L', 'BEVERAGES_AND_DAIRY_PRODUCTS', 500, 3),
+('Vassoura', 'OTHERS', 500, 3),
+('Papel higiênico', 'CLEANING_AND_HYGIENE', 500, 2);
 
 INSERT INTO tb_products
 VALUES ('7902635410298', 'Margarina', 'Primor', '', 150, 100, 200, 150, '2024-01-01 00:00:01', 0),

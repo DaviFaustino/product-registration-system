@@ -36,7 +36,7 @@ public class ProductTypeServiceTest {
 
     @BeforeEach
     void setup() {
-        productType = new ProductType("Sabão em barra", EnumCategory.LIMPEZA_E_HIGIENE, null, (short) 2);
+        productType = new ProductType("Sabão em barra", EnumCategory.CLEANING_AND_HYGIENE, null, (short) 2);
         productTypeUpdates = Map.of("name", "Sabão em pó", "fullStockFactor", (short) 1);
     }
 
@@ -64,7 +64,7 @@ public class ProductTypeServiceTest {
     @Test
     @DisplayName("Must get a list of product types using search term and category")
     void testGetProductTypesCase1() {
-        List<ProductType> serviceReturn = productTypeService.getProductTypes("Arr", Optional.of(EnumCategory.ALIMENTOS_REVENDA));
+        List<ProductType> serviceReturn = productTypeService.getProductTypes("Arr", Optional.of(EnumCategory.FOOD_STAPLES_FOR_RESALE));
 
         assertNotNull(serviceReturn);
         verify(productTypeRepository, times(1)).findByNameIgnoreCaseContainingAndCategory(any(), any());
@@ -74,7 +74,7 @@ public class ProductTypeServiceTest {
     @Test
     @DisplayName("Must get a list of product types using only the search term")
     void testGetProductTypesCase2() {
-        List<ProductType> serviceReturn = productTypeService.getProductTypes("Arr", Optional.of(EnumCategory.ALIMENTOS_REVENDA));
+        List<ProductType> serviceReturn = productTypeService.getProductTypes("Arr", Optional.of(EnumCategory.FOOD_STAPLES_FOR_RESALE));
 
         assertNotNull(serviceReturn);
         verify(productTypeRepository, times(1)).findByNameIgnoreCaseContainingAndCategory(any(), any());

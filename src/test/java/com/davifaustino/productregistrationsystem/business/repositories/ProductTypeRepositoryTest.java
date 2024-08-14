@@ -31,7 +31,7 @@ public class ProductTypeRepositoryTest {
     @Test
     @DisplayName("Must update a product type successfully")
     void testUpdateByName() {
-        ProductType productTypeUpdates = new ProductType("Pão adoçado", EnumCategory.PANIFICAÇÃO, 75, (short) 2);
+        ProductType productTypeUpdates = new ProductType("Pão adoçado", EnumCategory.BAKING, 75, (short) 2);
 
         productTypeRepository.updateByName("Pão doce", productTypeUpdates);
         ProductType updatedProductType = productTypeRepository.findById("Pão adoçado").orElse(null);

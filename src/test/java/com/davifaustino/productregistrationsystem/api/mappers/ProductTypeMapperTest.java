@@ -27,7 +27,7 @@ public class ProductTypeMapperTest {
 
     @Test
     void testToEntity() {
-        ProductTypeRequest productTypeRequest = new ProductTypeRequest("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA, (short) 2);
+        ProductTypeRequest productTypeRequest = new ProductTypeRequest("1kg de Feijão", EnumCategory.FOOD_STAPLES_FOR_RESALE, (short) 2);
         
         ProductType mapperResponse = productTypeMapper.toEntity(productTypeRequest);
 
@@ -38,7 +38,7 @@ public class ProductTypeMapperTest {
 
     @Test
     void testToResponse() {
-        ProductType productType = new ProductType("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2);
+        ProductType productType = new ProductType("1kg de Feijão", EnumCategory.FOOD_STAPLES_FOR_RESALE,1000, (short) 2);
 
         ProductTypeResponse mapperResponse = productTypeMapper.toResponse(productType);
 
@@ -51,8 +51,8 @@ public class ProductTypeMapperTest {
     @Test
     void testToResponseList() {
         List<ProductType> productTypeList = new ArrayList<>();
-        productTypeList.add(new ProductType("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA,1000, (short) 2));
-        productTypeList.add(new ProductType("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA,750, (short) 2));
+        productTypeList.add(new ProductType("1kg de Feijão", EnumCategory.FOOD_STAPLES_FOR_RESALE,1000, (short) 2));
+        productTypeList.add(new ProductType("1kg de Arroz", EnumCategory.FOOD_STAPLES_FOR_RESALE,750, (short) 2));
 
         List<ProductTypeResponse> mapperResponses = productTypeMapper.toResponseList(productTypeList);
 
@@ -69,7 +69,7 @@ public class ProductTypeMapperTest {
 
     @Test
     void testToMap() {
-        ProductTypeRequest productTypeRequest = new ProductTypeRequest("1kg de Feijão", EnumCategory.ALIMENTOS_REVENDA, (short) 2);
+        ProductTypeRequest productTypeRequest = new ProductTypeRequest("1kg de Feijão", EnumCategory.FOOD_STAPLES_FOR_RESALE, (short) 2);
         
         Map<String, Object> response = productTypeMapper.toMap(productTypeRequest);
 

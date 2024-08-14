@@ -51,9 +51,9 @@ public class ProductTypeControllerTest {
 
     @BeforeEach
     void setup() throws JsonProcessingException {
-        productType = new ProductType("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA, 0, (short) 1);
-        productTypeRequest = new ProductTypeRequest("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA, (short) 1);
-        productTypeResponse = new ProductTypeResponse("1kg de Arroz", EnumCategory.ALIMENTOS_REVENDA, 0, (short) 1);
+        productType = new ProductType("1kg de Arroz", EnumCategory.FOOD_STAPLES_FOR_RESALE, 0, (short) 1);
+        productTypeRequest = new ProductTypeRequest("1kg de Arroz", EnumCategory.FOOD_STAPLES_FOR_RESALE, (short) 1);
+        productTypeResponse = new ProductTypeResponse("1kg de Arroz", EnumCategory.FOOD_STAPLES_FOR_RESALE, 0, (short) 1);
         requestAsJson = objectMapper.writeValueAsString(productTypeRequest);
         productTypeUpdates = Map.of("name", "Sabão em pó", "fullStockFactor", (short) 1);
     }
@@ -119,7 +119,7 @@ public class ProductTypeControllerTest {
         mockMvc.perform(get("/product-types")
                         .accept(MediaType.APPLICATION_JSON)
                         .param("searchTerm", "d")
-                        .param("category", "PANIFICAÇÃO"))
+                        .param("category", "BAKING"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(Matchers.startsWith("[")));
     }
@@ -130,7 +130,7 @@ public class ProductTypeControllerTest {
 
         mockMvc.perform(get("/product-types")
                         .accept(MediaType.APPLICATION_JSON)
-                        .param("category", "PANIFICA"))
+                        .param("category", "BAKIN"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", notNullValue()))
                 .andExpect(jsonPath("$.time", notNullValue()))
