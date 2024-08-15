@@ -62,6 +62,12 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>3.2.0</version>
@@ -112,11 +118,6 @@
 				  <scope>runtime</scope>
 				  <optional>true</optional>
 				</dependency>
-				<dependency>
-					<groupId>org.springdoc</groupId>
-					<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-					<version>2.2.0</version>
-				</dependency>
 			</dependencies>
 
 			<build>
@@ -158,11 +159,6 @@
 					<scope>runtime</scope>
 					<version>42.6.1</version>
 				</dependency>
-				<dependency>
-					<groupId>org.springdoc</groupId>
-					<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-					<version>2.2.0</version>
-				</dependency>
 			</dependencies>
 
 			<build>
@@ -190,7 +186,7 @@
 			</build>
 
 			<properties>
-            	<activated.profile>hmlogprod</activated.profile>
+            	<activated.profile>hmlog</activated.profile>
         	</properties>
 		</profile>
 
@@ -207,7 +203,7 @@
 			</dependencies>
 
 			<properties>
-            	<activated.profile>hmlogprod</activated.profile>
+            	<activated.profile>prod</activated.profile>
         	</properties>
 		</profile>
 	</profiles>
