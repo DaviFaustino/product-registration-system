@@ -1,0 +1,43 @@
+version: '3.3'
+
+networks:
+    product-registration:
+        driver: bridge
+
+volumes:
+    db:
+    app:
+
+services:
+    database:
+        image: postgres:16.4
+        container_name: postgres-product-registration
+        networks:
+            - product-registration
+        environment:
+            POSTGRES_USER: ${USER}
+            POSTGRES_PASSWORD: ${PASSWORD}
+            POSTGRES_DB: product_registration_data
+        volumes:
+            - db:/var/data
+
+    application:
+        build:
+            context: .
+            args:
+                - MAVEN_PROFILE=production
+        image: product-registration-app:1.0.0
+        container_name: product-registration-app
+        networks:
+            - product-registration
+        ports:
+            - 8080:8080
+        environment:
+            DB_USERNAME: ${USER}
+            DB_PASSWORD: ${PASSWORD}
+            DB_HOST: postgres-product-registration
+        depends_on:
+            - database
+        volumes:
+            - app:/usr/src/app
+        restart: unless-stopped
