@@ -37,9 +37,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping(value = "/product-types", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/product-types", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "ProductTypes")
-public class ProductTypeController {
+public class ProductTypeControllerV1 {
 
     @Autowired
     private ProductTypeService productTypeService;
