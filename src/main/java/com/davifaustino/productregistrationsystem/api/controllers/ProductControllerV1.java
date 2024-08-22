@@ -36,9 +36,9 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/products", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Products")
-public class ProductController {
+public class ProductControllerV1 {
 
     @Autowired
     private ProductService productService;
@@ -118,7 +118,7 @@ public class ProductController {
                     content = {@Content(schema = @Schema(implementation =  ErrorResponse.class))})
     })
     @DeleteMapping
-    public ResponseEntity<Void> deleteProductType(@RequestParam(required = true) String code) {
+    public ResponseEntity<Void> deleteProduct(@RequestParam(required = true) String code) {
         productService.deleteProduct(code);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

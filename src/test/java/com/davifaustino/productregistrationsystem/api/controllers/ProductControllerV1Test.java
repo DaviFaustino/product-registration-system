@@ -36,8 +36,8 @@ import com.davifaustino.productregistrationsystem.business.services.ProductServi
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(ProductController.class)
-public class ProductControllerTest {
+@WebMvcTest(ProductControllerV1.class)
+public class ProductControllerV1Test {
 
     @Autowired
     private MockMvc mockMvc;
@@ -77,7 +77,7 @@ public class ProductControllerTest {
         when(productService.saveProduct(any(), any(Boolean.class))).thenReturn(product);
         when(productMapper.toResponse(any())).thenReturn(productResponse);
 
-        mockMvc.perform(post("/products")
+        mockMvc.perform(post("/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(requestAsJson))
@@ -100,13 +100,13 @@ public class ProductControllerTest {
         when(productMapper.toEntity(any())).thenReturn(product);
         when(productService.saveProduct(any(), any(Boolean.class))).thenThrow(new RecordConflictException("The Product already exists in the database"));
 
-        mockMvc.perform(post("/products")
+        mockMvc.perform(post("/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestAsJson))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.message", is("The Product already exists in the database")))
                 .andExpect(jsonPath("$.time", notNullValue()))
-                .andExpect(jsonPath("$.path", is("/products")))
+                .andExpect(jsonPath("$.path", is("/v1/products")))
                 .andExpect(jsonPath("$.method", is("POST")));
 
         verify(productMapper, VerificationModeFactory.times(0)).toResponse(any());
@@ -118,13 +118,13 @@ public class ProductControllerTest {
         productRequest.setName(null);
         requestAsJson = objectMapper.writeValueAsString(productRequest);
 
-        mockMvc.perform(post("/products")
+        mockMvc.perform(post("/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestAsJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", notNullValue()))
                 .andExpect(jsonPath("$.time", notNullValue()))
-                .andExpect(jsonPath("$.path", is("/products")))
+                .andExpect(jsonPath("$.path", is("/v1/products")))
                 .andExpect(jsonPath("$.method", is("POST")));
     }
 
@@ -134,13 +134,13 @@ public class ProductControllerTest {
         when(productMapper.toEntity(any())).thenReturn(product);
         when(productService.saveProduct(any(), any(Boolean.class))).thenThrow(new NonExistingRecordException(""));
 
-        mockMvc.perform(post("/products")
+        mockMvc.perform(post("/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestAsJson))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is("")))
                 .andExpect(jsonPath("$.time", notNullValue()))
-                .andExpect(jsonPath("$.path", is("/products")))
+                .andExpect(jsonPath("$.path", is("/v1/products")))
                 .andExpect(jsonPath("$.method", is("POST")));
 
         verify(productMapper, VerificationModeFactory.times(0)).toResponse(any());
@@ -157,7 +157,7 @@ public class ProductControllerTest {
         when(productService.getProducts(any(), any())).thenReturn(productList);
         when(productMapper.toResponseList(productList)).thenReturn(productResponseList);
 
-        mockMvc.perform(get("/products")
+        mockMvc.perform(get("/v1/products")
                         .param("searchTerm", "Arroz")
                         .param("productTypeName", "Arroz")
                         .accept(MediaType.APPLICATION_JSON))
@@ -170,13 +170,13 @@ public class ProductControllerTest {
     void testGetProducts2() throws Exception {
         when(productService.getProducts(any(), any())).thenThrow(new InvalidSearchException("Exception"));
 
-        mockMvc.perform(get("/products")
+        mockMvc.perform(get("/v1/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .param("searchTerm", ""))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message", is("Exception")))
                 .andExpect(jsonPath("$.time", notNullValue()))
-                .andExpect(jsonPath("$.path", is("/products")))
+                .andExpect(jsonPath("$.path", is("/v1/products")))
                 .andExpect(jsonPath("$.method", is("GET")));
     }
 
@@ -191,7 +191,7 @@ public class ProductControllerTest {
         when(productService.getProductsWithRecentPriceUpdate(1715000000000l)).thenReturn(productList);
         when(productMapper.toRecentPriceList(productList)).thenReturn(recentPriceList);
 
-        mockMvc.perform(get("/products/recent-price-updates")
+        mockMvc.perform(get("/v1/products/recent-price-updates")
                         .accept(MediaType.APPLICATION_JSON)
                         .param("initialTime", "1715000000000"))
                 .andExpect(status().isOk());
@@ -201,7 +201,7 @@ public class ProductControllerTest {
     @DisplayName("Must respond with an error message and status code 400")
     void testGetProductsWithRecentPriceUpdate2() throws Exception {
 
-        mockMvc.perform(get("/products/recent-price-updates")
+        mockMvc.perform(get("/v1/products/recent-price-updates")
                         .accept(MediaType.APPLICATION_JSON)
                         .param("initialTime", "false"))
                 .andExpect(status().isBadRequest());
@@ -213,7 +213,7 @@ public class ProductControllerTest {
         when(productMapper.toMap(productUpdateRequest)).thenReturn(productUpdates);
         when(productService.updateProduct(any(), any())).thenReturn(1);
 
-        mockMvc.perform(patch("/products")
+        mockMvc.perform(patch("/v1/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("code", "          003")
@@ -227,7 +227,7 @@ public class ProductControllerTest {
         when(productMapper.toMap(productUpdateRequest)).thenReturn(productUpdates);
         when(productService.updateProduct(any(), any())).thenThrow(NonExistingRecordException.class);
 
-        mockMvc.perform(patch("/products")
+        mockMvc.perform(patch("/v1/products")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("code", "          003")
