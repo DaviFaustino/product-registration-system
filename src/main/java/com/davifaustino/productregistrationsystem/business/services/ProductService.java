@@ -116,6 +116,7 @@ public class ProductService {
     @Transactional
     public void deleteProduct(String id) {
         
+        id = String.format("%13s", id);
         if (!productRepository.existsById(id)) {
             throw new NonExistingRecordException("Product not found");
         }

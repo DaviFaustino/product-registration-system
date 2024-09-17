@@ -12,7 +12,7 @@
 
 	<groupId>com.davifaustino</groupId>
 	<artifactId>product-registration-system-backend</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>product-registration-system-backend</name>
 	<description>Product Registration System</description>
 
