@@ -26,7 +26,7 @@ services:
             context: .
             args:
                 - MAVEN_PROFILE=production
-        image: product-registration-app:1.0.0
+        image: product-registration-app:1.0.1
         container_name: product-registration-app
         networks:
             - product-registration
