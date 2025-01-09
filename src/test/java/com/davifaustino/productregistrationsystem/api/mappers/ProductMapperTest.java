@@ -16,10 +16,9 @@ import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductUpdat
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductResponse;
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductWithRecentPriceResponse;
 import com.davifaustino.productregistrationsystem.business.entities.Product;
-import com.davifaustino.productregistrationsystem.config.ModelMapperConfig;
 import com.davifaustino.productregistrationsystem.config.ObjectMapperConfig;
 
-@SpringBootTest(classes = {ProductMapper.class, ModelMapperConfig.class, ObjectMapperConfig.class})
+@SpringBootTest(classes = {ProductMapper.class, ObjectMapperConfig.class})
 public class ProductMapperTest {
 
     @Autowired

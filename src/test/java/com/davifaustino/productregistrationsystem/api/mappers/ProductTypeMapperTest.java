@@ -15,11 +15,10 @@ import com.davifaustino.productregistrationsystem.api.dtos.requests.ProductTypeR
 import com.davifaustino.productregistrationsystem.api.dtos.responses.ProductTypeResponse;
 import com.davifaustino.productregistrationsystem.business.entities.EnumCategory;
 import com.davifaustino.productregistrationsystem.business.entities.ProductType;
-import com.davifaustino.productregistrationsystem.config.ModelMapperConfig;
 import com.davifaustino.productregistrationsystem.config.ObjectMapperConfig;
 
 @SpringBootTest(classes = ProductTypeMapper.class)
-@Import({ModelMapperConfig.class, ObjectMapperConfig.class})
+@Import({ObjectMapperConfig.class})
 public class ProductTypeMapperTest {
 
     @Autowired

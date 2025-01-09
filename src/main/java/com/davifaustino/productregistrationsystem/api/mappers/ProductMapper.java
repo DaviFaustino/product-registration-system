@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,19 +17,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class ProductMapper {
-    
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     public Product toEntity(ProductRequest request) {
-        return modelMapper.map(request, Product.class);
+        return objectMapper.convertValue(request, Product.class);
     }
 
     public ProductResponse toResponse(Product entity) {
-        return modelMapper.map(entity, ProductResponse.class);
+        return objectMapper.convertValue(entity, ProductResponse.class);
     }
 
     public List<ProductResponse> toResponseList(List<Product> entityList) {
@@ -39,7 +35,8 @@ public class ProductMapper {
 
     public List<ProductWithRecentPriceResponse> toRecentPriceList(List<Product> entityList) {
         return entityList.stream()
-                        .map(entity -> modelMapper.map(entity, ProductWithRecentPriceResponse.class))
+                        .map(entity -> objectMapper
+                            .convertValue(entity, ProductWithRecentPriceResponse.class))
                         .collect(Collectors.toList());
     } 
 
